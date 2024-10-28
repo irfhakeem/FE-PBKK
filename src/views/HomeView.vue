@@ -1,11 +1,11 @@
 <script setup>
-import TheWelcome from "../components/TheWelcome.vue";
+import Home from "@/components/Home.vue";
+// import Navbar from "@/components/Navbar.vue";
 </script>
 
 <template>
+  <!-- <Navbar /> -->
   <main>
-    <div class="flex items-center justify-center font-bold text-3xl h-screen">
-      <h1>Testing</h1>
-    </div>
+    <Home />
   </main>
 </template>
