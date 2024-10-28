@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { registerUser } from "@/api/auth/auth.js";
 import { useRouter } from "vue-router";
+import { Label } from "@/components/ui/label";
 
 const router = useRouter();
 const name = ref("");
@@ -27,10 +28,12 @@ const handleRegister = async () => {
     username: username.value,
     email: email.value,
     password: password.value,
+    avatar: "/public/avatar.svg",
   };
 
   try {
     const response = await registerUser(userData);
+    console.log(response);
     successMessage.value = "Registration successful! Please log in.";
     errorMessage.value = null;
     router.push("/login");
@@ -66,16 +69,20 @@ const handleRegister = async () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div class="mb-4">
+        <div class="mb-4 flex flex-col gap-2">
+          <label for="name" class="font-medium text-sm">Name</label>
           <Input v-model="name" placeholder="Name" />
         </div>
-        <div class="mb-4">
+        <div class="mb-4 flex flex-col gap-2">
+          <label for="username" class="font-medium text-sm">Username</label>
           <Input v-model="username" placeholder="Username" />
         </div>
-        <div class="mb-4">
-          <Input v-model="email" placeholder="Email" />
+        <div class="mb-4 flex flex-col gap-2">
+          <label for="email" class="font-medium text-sm">Email</label>
+          <Input v-model="email" type="email" placeholder="Email" />
         </div>
-        <div class="mb-4">
+        <div class="mb-4 flex flex-col gap-2">
+          <label for="password" class="font-medium text-sm">Password</label>
           <Input v-model="password" type="password" placeholder="Password" />
         </div>
         <div v-if="successMessage" class="text-green-500">
@@ -83,8 +90,14 @@ const handleRegister = async () => {
         </div>
         <div v-if="errorMessage" class="text-red-500">{{ errorMessage }}</div>
       </CardContent>
-      <CardFooter class="flex justify-end">
-        <Button @click="handleRegister" class="cursor-pointer">Register</Button>
+      <CardFooter class="flex flex-col gap-4">
+        <Button @click="handleRegister" class="cursor-pointer w-full"
+          >Register</Button
+        >
+        <p class="text-xs">
+          Already have an account?
+          <a class="font-semibold text-black" href="/login">Login</a>
+        </p>
       </CardFooter>
     </Card>
   </div>
