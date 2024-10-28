@@ -2,25 +2,11 @@ import axios from "axios";
 
 // Create axios instance with default config
 const api = axios.create({
-  baseURL: process.env.BASE_URL,
+  baseURL: "http://localhost:8000/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
 });
-
-// Add request interceptor to add auth token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 // Add response interceptor to handle common errors
 api.interceptors.response.use(
@@ -31,7 +17,7 @@ api.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           // Handle unauthorized
-          localStorage.removeItem("token");
+          sessionStorage.removeItem("token");
           // You might want to redirect to login page here
           break;
         case 403:
@@ -49,12 +35,10 @@ api.interceptors.response.use(
 export const registerUser = async (userData) => {
   try {
     const response = await api.post("/auth/register", userData);
-    if (response.data.token) {
-      localStorage.setItem("token", response.data.token);
-    }
-    return response.data;
+    return response.data.data;
   } catch (error) {
-    const errorMessage = error.response?.data?.message || "Registration failed";
+    const errorMessage =
+      error.response?.data.data.message || "Registration failed";
     throw new Error(errorMessage);
   }
 };
@@ -62,32 +46,20 @@ export const registerUser = async (userData) => {
 export const loginUser = async (userData) => {
   try {
     const response = await api.post("/auth/login", userData);
-    if (response.data.token) {
-      localStorage.setItem("token", response.data.token);
+    if (response.data.data.token) {
+      sessionStorage.setItem("token", response.data.data.token);
     }
-    return response.data;
+    return response.data.data;
   } catch (error) {
-    const errorMessage = error.response?.data?.message || "Login failed";
+    const errorMessage = error.response?.data?.data.message || "Login failed";
     throw new Error(errorMessage);
   }
 };
 
 export const logoutUser = () => {
-  localStorage.removeItem("token");
+  sessionStorage.removeItem("token");
 };
 
-export const getCurrentUser = async () => {
-  try {
-    const response = await api.get("/user/me");
-    return response.data;
-  } catch (error) {
-    const errorMessage =
-      error.response?.data?.message || "Failed to get user data";
-    throw new Error(errorMessage);
-  }
-};
-
-// Helper function to check if user is authenticated
 export const isAuthenticated = () => {
-  return !!localStorage.getItem("token");
+  return !!sessionStorage.getItem("token");
 };
