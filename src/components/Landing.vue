@@ -34,7 +34,7 @@ import { Button } from "@/components/ui/button";
           <a href="/">Our story</a>
           <a href="/">Membership</a>
           <a href="/">Write</a>
-          <a href="/">Sign in</a>
+          <a href="/login">Sign in</a>
         </div>
 
         <a
@@ -61,7 +61,7 @@ import { Button } from "@/components/ui/button";
         </span>
       </p>
       <a
-        href="/sign-in"
+        href="/login"
         class="bg-[#191919] hover:bg-black rounded-full text-white py-3 font-medium lg:text-base sm:text-sm text-sm mx-auto px-10"
       >
         Become a member
