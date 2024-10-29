@@ -12,6 +12,7 @@ const router = createRouter({
       path: "/home",
       name: "home",
       component: () => import("../views/HomeView.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/register",
@@ -28,8 +29,31 @@ const router = createRouter({
       name: "profile",
       component: () => import("../views/Profile.vue"),
       props: (route) => ({ username: route.params.username }),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/:username/:postId",
+      name: "post",
+      component: () => import("../views/Post.vue"),
+      props: (route) => ({
+        username: route.params.username,
+        postId: route.params.postId,
+      }),
+      meta: { requiresAuth: true },
     },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!sessionStorage.getItem("token");
+  if (
+    to.matched.some((record) => record.meta.requiresAuth) &&
+    !isAuthenticated
+  ) {
+    next({ name: "welcome" });
+  } else {
+    next();
+  }
 });
 
 export default router;
