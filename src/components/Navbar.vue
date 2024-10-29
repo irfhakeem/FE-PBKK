@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref, onMounted, computed } from "vue";
+// import { defineProps, ref, onMounted, computed } from "vue";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +27,7 @@ const handleLogout = () => {
     <div className="mx-auto px-3 sm:px-6 lg:px-8">
       <div className="relative flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
-          <a href=""
+          <a href="/home"
             ><svg
               class="w-36 md:w-44"
               viewBox="0 0 491.06667 75.141664"
@@ -97,7 +97,9 @@ const handleLogout = () => {
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOut class="mr-2 h-4 w-4" />
-              <button @click="handleLogout">Log out</button>
+              <button @click="handleLogout" class="w-full flex justify-start">
+                Log out
+              </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

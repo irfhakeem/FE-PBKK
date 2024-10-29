@@ -14,18 +14,13 @@ const props = defineProps({
 
 <template>
   <HoverCard>
-    <div className="flex gap-3 items-center mb-3">
+    <div className="flex gap-3 items-center">
       <HoverCardTrigger>
         <img src="" alt="" className="w-5 h-5 rounded-full" />
       </HoverCardTrigger>
       <HoverCardTrigger>
         <a href="" className="text-xs hover:underline flex items-center gap-2">
-          <!-- {author.name}
-              {author.verifiedAuthor && (
-                <>
-                  <CheckBadgeIcon className="w-4 h-auto fill-blue-600" />
-                </>
-              )} -->
+          {{ author.name }}
         </a>
       </HoverCardTrigger>
       <HoverCardContent>
@@ -41,16 +36,9 @@ const props = defineProps({
           </div>
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1">
-              <div className="flex gap-2">
-                <p className="font-semibold text-sm text-[#191919]">
-                  {{ author.name }}
-                </p>
-                <!-- {author.verifiedAuthor && (
-                      <>
-                        <CheckBadgeIcon className="w-5 h-auto fill-blue-600" />
-                      </>
-                    )} -->
-              </div>
+              <p className="font-semibold text-sm text-[#191919]">
+                {{ author.name }}
+              </p>
               <p className="text-xs">{{ author.followers }} Followers</p>
             </div>
             <p className="text-xs text-gray-500">{{ author.bio }}</p>
