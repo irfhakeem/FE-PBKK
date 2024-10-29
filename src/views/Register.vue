@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { registerUser } from "@/api/auth/auth.js";
 import { useRouter } from "vue-router";
-import { Label } from "@/components/ui/label";
 
 const router = useRouter();
 const name = ref("");
@@ -29,6 +28,7 @@ const handleRegister = async () => {
     email: email.value,
     password: password.value,
     avatar: "/public/avatar.svg",
+    banner: "/public/banner.jpg",
   };
 
   try {
