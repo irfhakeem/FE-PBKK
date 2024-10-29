@@ -1,23 +1,24 @@
 <script setup>
 import { Button } from "@/components/ui/button";
 import Navbar from "@/components/Navbar.vue";
-import Sidebar from "@/components/Slider.vue";
+import Slider from "@/components/Slider.vue";
 import Postcard from "@/components/PostCard.vue";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { me, userByUsername } from "@/api/user/user.js";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { Bell, Ellipsis, Link } from "lucide-vue-next";
+import { getPosts } from "@/api/post/post.js";
 
 const route = useRoute();
 const profileUsername = route.params.username;
+const posts = ref([]);
+const round = ref(1);
 
 const user = ref({
   username: "",
@@ -53,6 +54,11 @@ onMounted(async () => {
     user.value = await me();
     isMyProfile.value = false;
   }
+  posts.value = await getPosts({
+    round: round.value,
+    userId: author.value.id,
+    limit: 10,
+  });
 });
 
 const handleCopyLink = () => {
@@ -61,7 +67,12 @@ const handleCopyLink = () => {
 </script>
 
 <template>
-  <Navbar :user-username="author.username" :user-photo="author.avatar" />
+  <div v-if="!isMyProfile">
+    <Navbar :user-username="user.username" :user-photo="user.avatar" />
+  </div>
+  <div v-if="isMyProfile">
+    <Navbar :user-username="author.username" :user-photo="author.avatar" />
+  </div>
   <div
     class="grid grid-cols-1 lg:grid-cols-3 lg:max-w-6xl lg:mx-auto py-10 px-10 lg:px-5"
   >
@@ -72,8 +83,10 @@ const handleCopyLink = () => {
         class="w-full min-h-[150px] max-h-[150px] bg-center object-cover"
       />
       <div className="lg:mt-10 md:mt-6 lg:px-6 sm:px-8 px-4">
-        <div className="flex py-5 items-center justify-between">
-          <p className="hidden lg:block text-4xl font-bold ">
+        <div
+          className="flex lg:flex-row flex-col py-5 lg:items-center justify-between items-start"
+        >
+          <p className="block text-2xl sm:text-4xl font-bold ">
             {{ author.name }}
           </p>
           <DropdownMenu>
@@ -94,19 +107,22 @@ const handleCopyLink = () => {
         </div>
       </div>
       <!-- List -->
-      <Sidebar
+      <Slider
         :categories="['Home', 'Bookmarks']"
         :activeCategory="activeCategory"
         @update:activeCategory="setActiveCategory"
       />
       <!-- showcase -->
-      <div v-if="activeCategory == 'Home'">
-        <p>ini home</p>
+      <div v-if="activeCategory === 'Home'">
         <div v-if="isMyProfile">
-          <Postcard :author="author" />
+          <div v-for="post in posts" :key="post.id">
+            <Postcard :author="author" :post="post" />
+          </div>
         </div>
-        <div v-if="!isMyProfile">
-          <Postcard :author="author" :userID="user.id" />
+        <div v-else>
+          <div v-for="post in posts" :key="post.id">
+            <Postcard :author="author" :userID="user.id" :post="post" />
+          </div>
         </div>
       </div>
       <div v-if="activeCategory == 'Bookmarks'">
