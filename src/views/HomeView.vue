@@ -8,11 +8,14 @@ const user = ref({ username: "", avatar: "" });
 
 onMounted(async () => {
   user.value = await me();
+  console.log(user.value);
 });
+
+console.log(user.value.username, user.value.avatar);
 </script>
 
 <template>
-  <Navbar :user-name="user.username" :user-photo="user.avatar" />
+  <Navbar :user-username="user.username" :user-photo="user.avatar" />
   <main>
     <Home />
   </main>
