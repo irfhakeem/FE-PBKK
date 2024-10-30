@@ -1,5 +1,5 @@
 <script setup>
-// import { defineProps, ref, onMounted, computed } from "vue";
+import { defineProps, ref, onMounted, computed } from "vue";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +10,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { LogOut, Settings, User, Library } from "lucide-vue-next";
 import { logoutUser } from "@/api/auth/auth.js";
+
+
+const isSearchBarVisible = ref(false);
+
+// Toggle function for mobile search bar
+const toggleSearchBar = () => {
+  isSearchBarVisible.value = !isSearchBarVisible.value;
+};
 
 const props = defineProps({
   userUsername: String,
@@ -45,6 +53,16 @@ const handleLogout = () => {
               </g>
             </svg>
           </a>
+
+          <!-- search bar -->
+          <!-- Mobile Toggle Button -->
+          <button @click="toggleSearchBar" class="p-2 md:hidden">
+            <!-- Icon for search (you can use SVG or Font Icon) -->
+            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19a8 8 0 100-16 8 8 0 000 16zm21-3l-4.35-4.35" />
+            </svg>
+          </button>
+
           <div className="flex invisible md:visible">
             <button
               className="py-2 px-3 rounded-l-full bg-gray-100 cursor-default"
@@ -106,4 +124,23 @@ const handleLogout = () => {
       </div>
     </div>
   </nav>
+
+  <!-- Search bar container -->
+  <div
+    :class="{'flex': isSearchBarVisible, 'hidden': !isSearchBarVisible}"
+    class="flex flex-col items-center bg-gray-100 rounded-lg p-2 md:hidden"
+  >
+    <input
+      type="text"
+      class="placeholder-gray-500 focus:outline-none text-black bg-gray-100 py-2 pr-4 w-full rounded-full"
+      placeholder="Search.."
+    />
+  </div>
 </template>
+
+<style scoped>
+/* Additional styling for the mobile search bar */
+.mt-2 {
+  margin-top: 0.5rem; /* Adjust spacing as needed */
+}
+</style>
