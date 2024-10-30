@@ -1,5 +1,6 @@
 <script setup>
 // import { defineProps, ref, onMounted, computed } from "vue";
+import { ref }  from "vue";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,16 +17,33 @@ const props = defineProps({
   userPhoto: String,
 });
 
+// State for toggling the search bar on mobile
+const isSearchBarVisible = ref(false);
+// const isDropdownVisible = ref(false); // State for dropdown visibility
+const isMobile = ref(window.innerWidth < 768); 
+
+// Toggle function for mobile search bar
+const toggleSearchBar = () => {
+  isSearchBarVisible.value = !isSearchBarVisible.value;
+};
+
 const handleLogout = () => {
   logoutUser();
   window.location.href = "/login";
 };
+
+// Watch for window resize to update isMobile
+window.addEventListener('resize', () => {
+  isMobile.value = window.innerWidth < 768; // Change 768 to your mobile breakpoint
+});
 </script>
 
 <template>
   <nav className="bg-white border-b-2 border-gray-100">
     <div className="mx-auto px-3 sm:px-6 lg:px-8">
       <div className="relative flex h-16 items-center justify-between">
+
+        <!-- Logo -->
         <div className="flex items-center gap-6">
           <a href="/home"
             ><svg
@@ -45,18 +63,29 @@ const handleLogout = () => {
               </g>
             </svg>
           </a>
-          <div className="flex invisible md:visible">
-            <button
-              className="py-2 px-3 rounded-l-full bg-gray-100 cursor-default"
-            ></button>
+          
+          <div class="flex items-center">
+            <!-- Mobile Toggle Button -->
+            <button @click="toggleSearchBar" class="p-2 md:hidden">
+              <!-- Icon for search (you can use SVG or Font Icon) -->
+              <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19a8 8 0 100-16 8 8 0 000 16zm21-3l-4.35-4.35" />
+              </svg>
+            </button>
+
+            <!-- Desktop Search Bar (always visible) -->
+          <div class="flex invisible md:visible">
+            <button class="py-2 px-3 rounded-l-full bg-gray-100 cursor-default"></button>
             <input
               type="text"
-              className="placeholder-gray-500 focus:outline-none rounded-r-full text-black bg-gray-100 py-2 pr-4"
+              class="placeholder-gray-500 focus:outline-none rounded-r-full text-black bg-gray-100 py-2 pr-4"
               placeholder="Search.."
             />
           </div>
+          </div>
         </div>
 
+        <!-- div used to center the search bar -->
         <div
           className="absolute inset-y-0 right-0 flex gap-5 items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
@@ -67,14 +96,25 @@ const handleLogout = () => {
             ></button>
           </div>
         </div>
+
+        <!-- Dropdown -->
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
+            <!-- Show user photo on larger screens and hamburger icon on mobile -->
             <img
+              v-if="!isMobile"
               :src="props.userPhoto"
               alt="User Photo"
               class="h-12 w-12 rounded-full object-cover bg-center bg-cover cursor-pointer"
+              @click="toggleDropdown"
             />
+            <button v-else @click="toggleDropdown" class="flex items-center p-2 md:hidden">
+              <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+              </svg>
+            </button>
           </DropdownMenuTrigger>
+
           <DropdownMenuContent class="w-56">
             <DropdownMenuLabel>{{ props.userUsername }}</DropdownMenuLabel>
             <DropdownMenuSeparator />
@@ -106,4 +146,24 @@ const handleLogout = () => {
       </div>
     </div>
   </nav>
+
+  <!-- Search bar container for mobile  -->
+  <div
+    :class="{'flex': isSearchBarVisible, 'hidden': !isSearchBarVisible}"
+    class="flex flex-col items-center bg-gray-100 rounded-lg p-2 md:hidden"
+  >
+    <input
+      type="text"
+      class="placeholder-gray-500 focus:outline-none text-black bg-gray-100 py-2 pr-4 w-full rounded-full"
+      placeholder="Search.."
+    />
+  </div>
 </template>
+
+
+<style scoped>
+/* Additional styling for the mobile search bar */
+.mt-2 {
+  margin-top: 0.5rem; /* Adjust spacing as needed */
+}
+</style>
