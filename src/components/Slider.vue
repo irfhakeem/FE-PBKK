@@ -26,7 +26,7 @@ const updateCategory = (category) => {
         v-for="category in categories"
         :key="category"
         :class="[
-          'mr-10 pb-4 text-sm hover:text-black cursor-pointer',
+          'mr-10 pb-4  text-xs sm:text-sm hover:text-black cursor-pointer',
           activeCategory === category
             ? 'border-b-2 border-black text-black'
             : 'text-gray-500',
