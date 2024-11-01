@@ -27,7 +27,7 @@ const handleRegister = async () => {
     username: username.value,
     email: email.value,
     password: password.value,
-    avatar: "/public/avatar.svg",
+    avatar: "/public/default_avatar.svg",
     banner: "/public/banner.jpg",
   };
 
@@ -47,7 +47,7 @@ const handleRegister = async () => {
 
 <template>
   <div class="flex h-screen items-center justify-center bg-white-100">
-    <Card class="w-[450px] p-5">
+    <Card class="w-[300px] sm:w-[400px] md:w-[450px] p-2 md:p-5">
       <CardHeader>
         <CardTitle class="flex items-center justify-center">
           <svg
@@ -70,19 +70,25 @@ const handleRegister = async () => {
       </CardHeader>
       <CardContent>
         <div class="mb-4 flex flex-col gap-2">
-          <label for="name" class="font-medium text-sm">Name</label>
+          <label for="name" class="font-medium text-xs sm:text-sm">Name</label>
           <Input v-model="name" placeholder="Name" />
         </div>
         <div class="mb-4 flex flex-col gap-2">
-          <label for="username" class="font-medium text-sm">Username</label>
+          <label for="username" class="font-medium text-xs sm:text-sm"
+            >Username</label
+          >
           <Input v-model="username" placeholder="Username" />
         </div>
         <div class="mb-4 flex flex-col gap-2">
-          <label for="email" class="font-medium text-sm">Email</label>
+          <label for="email" class="font-medium text-xs sm:text-sm"
+            >Email</label
+          >
           <Input v-model="email" type="email" placeholder="Email" />
         </div>
         <div class="mb-4 flex flex-col gap-2">
-          <label for="password" class="font-medium text-sm">Password</label>
+          <label for="password" class="font-medium text-xs sm:text-sm"
+            >Password</label
+          >
           <Input v-model="password" type="password" placeholder="Password" />
         </div>
         <div v-if="successMessage" class="text-green-500">
@@ -91,10 +97,12 @@ const handleRegister = async () => {
         <div v-if="errorMessage" class="text-red-500">{{ errorMessage }}</div>
       </CardContent>
       <CardFooter class="flex flex-col gap-4">
-        <Button @click="handleRegister" class="cursor-pointer w-full"
+        <Button
+          @click="handleRegister"
+          class="cursor-pointer w-full text-xs sm:text-sm"
           >Register</Button
         >
-        <p class="text-xs">
+        <p class="text-[10px] text-xs">
           Already have an account?
           <a class="font-semibold text-black" href="/login">Login</a>
         </p>
