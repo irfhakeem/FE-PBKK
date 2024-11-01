@@ -54,39 +54,39 @@ console.log(recommendedPosts.value);
         <!-- Header content -->
         <div class="grid grid-cols-1 py-5 px-10 ">
           <h1 class="text-3xl font-semibold">Settings</h1>
-  </div>
+        </div>
 
-  <!-- navigation menu -->
+        <!-- navigation menu -->
         <div class="grid grid-cols-1 py-5 px-10 ">
-  <NavigationMenu>
-    <NavigationMenuList>
-      <NavigationMenuItem>
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem>
                 <NavigationMenuTrigger class="font-semibold">Account</NavigationMenuTrigger>
-      </NavigationMenuItem>
-    </NavigationMenuList>
-  </NavigationMenu>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </div>
       </div>
     </header>
 
     <!-- Main Content -->
     <div class="container grid grid-cols-1 lg:max-w-10xl py-5 px-10 flex-grow">
-  <!-- content -->
+      <!-- content -->
       <div class="grid grid-cols-1 lg:max-w-10xl py-5 px-10">
-    <!-- Account Section -->
-    <div class="border-b pb-4 mb-6">
+      <!-- Account Section -->
+        <div class="border-b pb-4 mb-6">
           <div class="flex justify-between items-center mt-4 mb-4 gap-3">
-        <span>Email address</span>
-        <span class="text-gray-600">mirfanhakim1004@gmail.com</span>
-      </div>
+            <span>Email address</span>
+            <span class="text-gray-600">mirfanhakim1004@gmail.com</span>
+          </div>
           <div class="flex justify-between items-center mt-4 mb-4 gap-3">
-        <span>Username and subdomain</span>
-        <span class="text-gray-600">@mirfanhakim100</span>
-      </div>
+            <span>Username and subdomain</span>
+            <span class="text-gray-600">@mirfanhakim100</span>
+          </div>
           <div class="flex justify-between items-center mt-4 mb-4 gap-3">
-        <span>Profile information</span>
-        <span class="text-gray-600">Muhammad Irfan Hakim</span>
-      </div>
+            <span>Profile information</span>
+            <span class="text-gray-600">Muhammad Irfan Hakim</span>
+          </div>
           <div class="flex justify-between items-center mt-4 mb-4 gap-3">
             <span>Change password</span>
             <span class="text-gray-600">Change your password.</span>
@@ -100,7 +100,7 @@ console.log(recommendedPosts.value);
           </div>
         </div>
       </div>
-    </div>
+   </div>
   </div>
 
   
