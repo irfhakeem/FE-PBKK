@@ -8,9 +8,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, User, Library } from "lucide-vue-next";
+import { LogOut, Settings, User, Library, Search } from "lucide-vue-next";
 import { logoutUser } from "@/api/auth/auth.js";
-
 
 const isSearchBarVisible = ref(false);
 
@@ -32,8 +31,8 @@ const handleLogout = () => {
 
 <template>
   <nav className="bg-white border-b-2 border-gray-100">
-    <div className="mx-auto px-3 sm:px-6 lg:px-8">
-      <div className="relative flex h-16 items-center justify-between">
+    <div className="mx-auto px-6 md:px-8">
+      <div className="flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
           <a href="/home"
             ><svg
@@ -55,15 +54,7 @@ const handleLogout = () => {
           </a>
 
           <!-- search bar -->
-          <!-- Mobile Toggle Button -->
-          <button @click="toggleSearchBar" class="p-2 md:hidden">
-            <!-- Icon for search (you can use SVG or Font Icon) -->
-            <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19a8 8 0 100-16 8 8 0 000 16zm21-3l-4.35-4.35" />
-            </svg>
-          </button>
-
-          <div className="flex invisible md:visible">
+          <div className="sm:flex hidden">
             <button
               className="py-2 px-3 rounded-l-full bg-gray-100 cursor-default"
             ></button>
@@ -75,72 +66,71 @@ const handleLogout = () => {
           </div>
         </div>
 
-        <div
-          className="absolute inset-y-0 right-0 flex gap-5 items-center sm:static sm:inset-auto sm:ml-6 sm:pr-0"
-        >
-          <div className="md:hidden flex">
-            <button
-              type="button"
-              className="flex gap-[7px] p-1 text-gray-500 justify-center items-center hover:text-gray-700 focus:outline-none focus:text-gray-700"
-            ></button>
-          </div>
-        </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger as-child>
-            <img
-              :src="props.userPhoto"
-              alt="User Photo"
-              class="h-12 w-12 rounded-full object-cover bg-center bg-cover cursor-pointer"
-            />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent class="w-56">
-            <DropdownMenuLabel>{{ props.userUsername }}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
+        <div class="flex items-center justify-center gap-6">
+          <button @click="toggleSearchBar" class="sm:hidden">
+            <Search class="h-6 w-6 text-gray-400" />
+          </button>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger as-child>
+              <img
+                :src="props.userPhoto"
+                alt="User Photo"
+                class="h-10 w-10 rounded-full object-cover bg-center bg-cover cursor-pointer"
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent class="w-40 sm:w-48 md:w-56">
+              <DropdownMenuLabel>{{ props.userUsername }}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <User class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
+                  <a
+                    :href="'/profile/' + props.userUsername"
+                    class="sm:text-sm text-xs w-full"
+                    >Profile</a
+                  >
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Library class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
+                  <a href="/profile/bookmark" class="sm:text-sm text-xs w-full"
+                    >Bookmark</a
+                  >
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Settings class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
+                  <a href="/settings" class="sm:text-sm text-xs w-full"
+                    >Settings</a
+                  >
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+              <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <User class="mr-2 h-4 w-4" />
-                <a :href="'/profile/' + props.userUsername" class="w-full"
-                  >Profile</a
+                <LogOut class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
+                <button
+                  @click="handleLogout"
+                  class="sm:text-sm text-xs w-full flex justify-start"
                 >
+                  Log out
+                </button>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Library class="mr-2 h-4 w-4" />
-                <a href="/profile/bookmark" class="w-full">Bookmark</a>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings class="mr-2 h-4 w-4" />
-                <a href="/settings" class="w-full">Settings</a>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut class="mr-2 h-4 w-4" />
-              <button @click="handleLogout" class="w-full flex justify-start">
-                Log out
-              </button>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
+      <!-- Mobile Toggle Button -->
     </div>
   </nav>
 
   <!-- Search bar container -->
   <div
-    :class="{'flex': isSearchBarVisible, 'hidden': !isSearchBarVisible}"
-    class="flex flex-col items-center bg-gray-100 rounded-lg p-2 md:hidden"
+    :class="{ flex: isSearchBarVisible, hidden: !isSearchBarVisible }"
+    class="flex flex-col items-center bg-gray-100 p-2 md:hidden"
   >
     <input
       type="text"
-      class="placeholder-gray-500 focus:outline-none text-black bg-gray-100 py-2 pr-4 w-full rounded-full"
+      class="placeholder-gray-500 focus:outline-none text-black bg-gray-100 py-2 px-4 w-full"
       placeholder="Search.."
     />
   </div>
 </template>
-
-<style scoped>
-/* Additional styling for the mobile search bar */
-.mt-2 {
-  margin-top: 0.5rem; /* Adjust spacing as needed */
-}
-</style>
