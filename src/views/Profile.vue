@@ -14,6 +14,7 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { Bell, Ellipsis, Link } from "lucide-vue-next";
 import { getPosts } from "@/api/post/post.js";
+import FollowButton from "../components/FollowButton.vue";
 
 const route = useRoute();
 const profileUsername = route.params.username;
@@ -21,6 +22,7 @@ const posts = ref([]);
 const round = ref(1);
 
 const user = ref({
+  id: "",
   username: "",
   avatar: "",
   email: "",
@@ -30,6 +32,7 @@ const user = ref({
 });
 
 const author = ref({
+  id: "",
   username: "",
   avatar: "",
   email: "",
@@ -156,11 +159,14 @@ const handleCopyLink = () => {
                 Edit profile
               </a>
             </div>
-            <div v-if="!isMyProfile" className="mt-6 flex gap-2">
-              <Button
-                class="cursor-pointer font-medium bg-[#37823a] hover:bg-[#295d2a] text-[#f7f7f7] rounded-full lg:px-4 lg:py-[8px] py-[6px] px-3 lg:text-[14px] text-xs"
-                >Follow</Button
-              >
+            <div
+              v-if="!isMyProfile && author.id"
+              class="mt-6 flex gap-2 items-center"
+            >
+              <FollowButton
+                :followingId="author.id"
+                :style="'cursor-pointer font-medium bg-[#37823a] hover:bg-[#295d2a] text-[#f7f7f7] rounded-full px-5 lg:py-[8px] py-[6px]'"
+              />
               <Button
                 class="cursor-pointer font-medium bg-[#37823a] hover:bg-[#295d2a] text-[#f7f7f7] rounded-full px-2.5 lg:py-[8px] py-[6px]"
               >
