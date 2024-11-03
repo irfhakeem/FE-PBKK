@@ -64,3 +64,32 @@ export const deleteAccount = async () => {
     throw new Error("Failed to delete account");
   }
 };
+
+export const followUser = async (followingId) => {
+  try {
+    const response = await apiClient.post("/follow", { followingId });
+    return response.data.data;
+  } catch (error) {
+    throw new Error("Failed to follow user");
+  }
+};
+
+export const unfollowUser = async (followingId) => {
+  try {
+    await apiClient.delete("/unfollow", { data: { followingId } });
+    return;
+  } catch (error) {
+    throw new Error("Failed to unfollow user");
+  }
+};
+
+export const isFollowing = async (followingId) => {
+  try {
+    const response = await apiClient.post("/is-following", {
+      followingId,
+    });
+    return response.data.data.isFollowing;
+  } catch (error) {
+    throw new Error("Failed to check if user is following");
+  }
+};
