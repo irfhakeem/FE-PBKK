@@ -150,61 +150,68 @@ const handleCopyLink = () => {
       </div>
 
       <div v-if="activeCategory == 'Lists'">
-        <Card class="w-full">
-          <div class="flex">
-            <!-- sections -->
-            <div class="flex-[0.55] bg-gray-100">
-              <CardHeader>
-                <CardDescription class="flex items-center gap-2">
-                  <!-- User Avatar -->
-                  <img
-                    :src="author.avatar"
-                    alt="User avatar"
-                    class="w-10 h-10 rounded-full object-cover"
-                  />
-                  <!-- Username -->
-                  <span class="text-sm font-semibold text-gray-800"
-                    >user name</span
-                  >
-                </CardDescription>
+        <!-- nanti linknya bisa disesuaikan -->
+        <router-link
+        
+          to="/profile/:username/lists"
+          class="block bg-gray-100 rounded cursor-pointer hover:bg-gray-200 w-full"
+        >
+          <Card class="w-full">
+            <div class="flex">
+              <!-- sections -->
+              <div class="flex-[0.55] bg-gray-100">
+                <CardHeader>
+                  <CardDescription class="flex items-center gap-2">
+                    <!-- User Avatar -->
+                    <img
+                      :src="author.avatar"
+                      alt="User avatar"
+                      class="w-10 h-10 rounded-full object-cover"
+                    />
+                    <!-- Username -->
+                    <span class="text-sm font-semibold text-gray-800"
+                      >user name</span
+                    >
+                  </CardDescription>
 
-                <!-- Card Title -->
-                <CardTitle class="font-bold">Reading List</CardTitle>
-              </CardHeader>
-              <CardFooter class="flex justify-between px-6 pb-6">
-                <p class="text-sm text-gray-600">1 story</p>
+                  <!-- Card Title -->
+                  <CardTitle class="font-bold">Reading List</CardTitle>
+                </CardHeader>
+                <CardFooter class="flex justify-between px-6 pb-6">
+                  <p class="text-sm text-gray-600">1 story</p>
 
-                <!-- Options Dropdown -->
-                <div class="relative">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger as-child>
-                      <button><Ellipsis aria-hidden="true"></Ellipsis></button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent class="md:w-40 sm:w-48 w-40">
-                      <DropdownMenuItem>Copy link</DropdownMenuItem>
-                      <DropdownMenuItem>Edit list info</DropdownMenuItem>
-                      <DropdownMenuItem>Remove items</DropdownMenuItem>
-                      <!-- if list is private -->
-                      <DropdownMenuItem>Make list public</DropdownMenuItem>
+                  <!-- Options Dropdown -->
+                  <div class="relative">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger as-child>
+                        <button><Ellipsis aria-hidden="true"></Ellipsis></button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent class="md:w-40 sm:w-48 w-40">
+                        <DropdownMenuItem>Copy link</DropdownMenuItem>
+                        <DropdownMenuItem>Edit list info</DropdownMenuItem>
+                        <DropdownMenuItem>Remove items</DropdownMenuItem>
+                        <!-- if list is private -->
+                        <DropdownMenuItem>Make list public</DropdownMenuItem>
 
-                      <DropdownMenuItem>Reorder items</DropdownMenuItem>
-                      <DropdownMenuItem>Hide responses</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </CardFooter>
+                        <DropdownMenuItem>Reorder items</DropdownMenuItem>
+                        <DropdownMenuItem>Hide responses</DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </CardFooter>
+              </div>
+              <div class="flex-[0.25] bg-red-100">
+                <!-- fill with story banner klo ada-->
+              </div>
+              <div class="flex-[0.15] bg-green-100 ml-1">
+                <!-- fill with story banner klo ada-->
+              </div>
+              <div class="flex-[0.06] bg-blue-100 ml-1">
+                <!-- fill with story banner klo ada-->
+              </div>
             </div>
-            <div class="flex-[0.25] bg-red-100">
-              <!-- fill with story banner klo ada-->
-            </div>
-            <div class="flex-[0.15] bg-green-100 ml-1">
-              <!-- fill with story banner klo ada-->
-            </div>
-            <div class="flex-[0.06] bg-blue-100 ml-1">
-              <!-- fill with story banner klo ada-->
-            </div>
-          </div>
-        </Card>
+          </Card>
+        </router-link>
       </div>
     </div>
 

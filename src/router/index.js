@@ -35,7 +35,7 @@ const router = createRouter({
       name: "profile",
       component: () => import("../views/Profile.vue"),
       props: (route) => ({ username: route.params.username }),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
     },
     {
       path: "/:username/:postId",
@@ -45,7 +45,7 @@ const router = createRouter({
         username: route.params.username,
         postId: route.params.postId,
       }),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
     },
     {
       path: "/profile/:username/lists",

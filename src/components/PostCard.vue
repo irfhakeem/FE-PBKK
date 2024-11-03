@@ -30,19 +30,44 @@ const infoPost = ref([
     value: 99,
   },
 ]);
+
+const isShowButtons = ref(false);
+
+const showButtons = () => {
+  isShowButtons.value = true; // Set isShowButtons to true
+};
+
+const hideButtons = () => {
+  isShowButtons.value = false; // Set isShowButtons to false
+};
+
+const cancel = () => {
+  console.log('Cancel clicked');
+  hideButtons(); // Hide buttons after canceling
+};
+
+const done = () => {
+  console.log('Done clicked');
+  hideButtons(); // Hide buttons after done
+};
 </script>
 
 <template>
   
   <div class="my-6 flex  items-center gap-1.5">
     <div class="border-l-4 h-10 border-black mr-3"></div>
-    <Input class="bg-gray-100" id="desc" type="desc" placeholder="Write a brief description" />
-    <Button variant="ghost">
-      Cancel
-    </Button>
-    <Button variant="ghost">
-      Done
-    </Button>
+    <Input
+      class="bg-gray-100"
+      id="desc"
+      type="text"
+      placeholder="Write a brief description"
+      @focus="showButtons"  
+      @blur="hideButtons"  
+    />
+    <div v-if="isShowButtons" class="flex gap-2">
+      <Button variant="ghost" @click="cancel">Cancel</Button>
+      <Button variant="ghost" @click="done">Done</Button>
+    </div>
   </div>
 
   <div class="my-6">
