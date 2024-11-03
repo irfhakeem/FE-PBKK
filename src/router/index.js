@@ -21,6 +21,12 @@ const router = createRouter({
       // meta: { requiresAuth: true },
     },
     {
+      path: "/settings",
+      name: "setting",
+      component: () => import("../views/Setting.vue"),
+      // meta: { requiresAuth: true },    
+    },
+    {
       path: "/register",
       name: "register",
       component: () => import("../views/Register.vue"),
@@ -46,6 +52,11 @@ const router = createRouter({
         postId: route.params.postId,
       }),
       meta: { requiresAuth: true },
+    },
+    {
+      path: "/:catchAll(.*)",
+      name: "not-found",
+      component: () => import("../views/NotFound.vue"),
     },
   ],
 });

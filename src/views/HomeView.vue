@@ -8,10 +8,7 @@ const user = ref({ username: "", avatar: "" });
 
 onMounted(async () => {
   user.value = await me();
-  console.log(user.value);
 });
-
-console.log(user.value.username, user.value.avatar);
 </script>
 
 <template>

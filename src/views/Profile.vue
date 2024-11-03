@@ -74,7 +74,7 @@ const handleCopyLink = () => {
     <Navbar :user-username="author.username" :user-photo="author.avatar" />
   </div>
   <div
-    class="grid grid-cols-1 lg:grid-cols-3 lg:max-w-6xl lg:mx-auto py-10 px-10 lg:px-5"
+    class="grid grid-cols-1 lg:grid-cols-3 lg:max-w-6xl lg:mx-auto py-10 px-6 md:px-8"
   >
     <div className="lg:col-span-2 lg:max-w-[717px] ">
       <img
@@ -93,15 +93,16 @@ const handleCopyLink = () => {
             <DropdownMenuTrigger as-child>
               <button><Ellipsis aria-hidden="true"></Ellipsis></button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent class="w-56">
-              <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <Link class="mr-2 h-4 w-4" />
-                  <button @click="handleCopyLink" class="w-full">
-                    Copy link to profile
-                  </button>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
+            <DropdownMenuContent class="md:w-56 sm:w-48 w-40">
+              <DropdownMenuItem>
+                <Link class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
+                <button
+                  @click="handleCopyLink"
+                  class="text-xs sm:text-sm w-full"
+                >
+                  Copy link to profile
+                </button>
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

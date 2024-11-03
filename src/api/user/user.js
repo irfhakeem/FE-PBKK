@@ -37,3 +37,30 @@ export const userByUsername = async (username) => {
     throw new Error("Failed to fetch user data");
   }
 };
+
+export const updateUser = async (data) => {
+  try {
+    const response = await apiClient.patch("/update-profile", data);
+    return response.data.data;
+  } catch (error) {
+    throw new Error("Failed to update user data");
+  }
+};
+
+export const deactivateAccount = async () => {
+  try {
+    const response = await apiClient.delete("/deactivate");
+    return response.data.data;
+  } catch (error) {
+    throw new Error("Failed to deactivate account");
+  }
+};
+
+export const deleteAccount = async () => {
+  try {
+    const response = await apiClient.delete("/delete-profile");
+    return response.data.data;
+  } catch (error) {
+    throw new Error("Failed to delete account");
+  }
+};

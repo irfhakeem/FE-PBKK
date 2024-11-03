@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { loginUser } from "@/api/auth/auth.js";
 import { useRouter } from "vue-router";
-import { Label } from "@/components/ui/label";
 
 const router = useRouter();
 const email = ref("");
@@ -27,12 +26,12 @@ const handleRegister = async () => {
   };
 
   try {
-    const response = await loginUser(userData);
+    await loginUser(userData);
     successMessage.value = "Login successful!";
     errorMessage.value = null;
     router.push("/home");
   } catch (error) {
-    errorMessage.value = error.message || "Login failed, please try again.";
+    errorMessage.value = "Email or password is incorrect";
     successMessage.value = null;
   }
 };
@@ -63,11 +62,15 @@ const handleRegister = async () => {
       </CardHeader>
       <CardContent>
         <div class="mb-4 flex flex-col gap-2">
-          <label for="email" class="font-medium text-sm">Email</label>
+          <label for="email" class="font-medium text-xs sm:text-sm"
+            >Email</label
+          >
           <Input v-model="email" placeholder="Email or Username" />
         </div>
         <div class="mb-4 flex flex-col gap-2">
-          <label for="password" class="font-medium text-sm">Password</label>
+          <label for="password" class="font-medium text-xs sm:text-sm"
+            >Password</label
+          >
           <Input v-model="password" type="password" placeholder="Password" />
         </div>
         <div v-if="successMessage" class="text-green-500">
@@ -76,10 +79,12 @@ const handleRegister = async () => {
         <div v-if="errorMessage" class="text-red-500">{{ errorMessage }}</div>
       </CardContent>
       <CardFooter class="flex flex-col gap-4">
-        <Button @click="handleRegister" class="w-full cursor-pointer"
+        <Button
+          @click="handleRegister"
+          class="w-full cursor-pointer font-medium text-xs sm:text-sm"
           >Login</Button
         >
-        <p class="text-xs">
+        <p class="text-[10px] sm:text-xs">
           Not registered yet?
           <a class="font-semibold text-black" href="/register"
             >Create an account</a
