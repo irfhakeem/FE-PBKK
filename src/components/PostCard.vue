@@ -2,6 +2,8 @@
 import { ref } from "vue";
 import { Heart, Clock, MessageCircle } from "lucide-vue-next";
 import ProfielCard from "@/components/ProfileCard.vue";
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { formatDate } from "@/lib/formatDate";
 
 // Need Modify
@@ -15,7 +17,7 @@ const infoPost = ref([
   {
     info: "time",
     icon: Clock,
-    value: formatDate(props.post.createdAt),
+    // value: formatDate(props.post.createdAt),
   },
   {
     info: "totalLikes",
@@ -31,35 +33,49 @@ const infoPost = ref([
 </script>
 
 <template>
-  <div class="mb-3">
+  
+  <div class="my-6 flex  items-center gap-1.5">
+    <div class="border-l-4 h-10 border-black mr-3"></div>
+    <Input class="bg-gray-100" id="desc" type="desc" placeholder="Write a brief description" />
+    <Button variant="ghost">
+      Cancel
+    </Button>
+    <Button variant="ghost">
+      Done
+    </Button>
+  </div>
+
+  <div class="my-6">
     <ProfielCard :author="author" :userID="userID" />
   </div>
   <div
     className="grid sm:grid-cols-3 border-b-2 sm:mb-10 sm:pb-10 border-gray-100"
   >
     <div className="col-span-2 flex-col ">
+
       <a
-        :href="'/' + props.author.username + '/' + props.post.id"
-        className="col-span-1 flex justify-center lg:justify-end items-center visible sm:hidden"
+        :href="props.author && props.post ? '/' + props.author.username + '/' + props.post.id : '#'"
+        class="col-span-1 flex justify-center lg:justify-end items-center visible sm:hidden"
       >
         <img
-          :src="props.post.image"
-          alt=""
-          className="w-full h-24 md:w-44 md:h-[6.5rem] object-center object-cover mb-5"
+          :src="props.post && props.post.image ? props.post.image : 'https://via.placeholder.com/150'"
+          alt="Post Image"
+          class="w-full h-24 md:w-44 md:h-[6.5rem] object-center object-cover mb-5"
         />
       </a>
-      <a :href="'/' + props.author.username + '/' + props.post.id">
+      <a :href="props.author && props.post ? '/' + props.author.username + '/' + props.post.id : '#'">
         <span
-          className="text-lg md:textxl lg:text-2xl text-black font-bold line-clamp-2"
+          class="text-lg md:text-xl lg:text-2xl text-black font-bold line-clamp-2"
         >
-          {{ props.post.title }}
+          {{ props.post && props.post.title ? props.post.title : "Default Title" }}
         </span>
         <span
-          className="text-gray-500 text-xs md:text-sm font-medium mt-2 mb-5 line-clamp-2"
+          class="text-gray-500 text-xs md:text-sm font-medium mt-2 mb-5 line-clamp-2"
         >
-          {{ props.post.caption }}
+          {{ props.post && props.post.caption ? props.post.caption : "Default caption text for testing the component layout." }}
         </span>
       </a>
+
       <div
         className="flex justify-between text-gray-500 text-xs font-medium items-center"
       >
@@ -89,7 +105,7 @@ const infoPost = ref([
     >
       <img
         :src="props.post.image"
-        alt=""
+        alt="Post Image"
         className=" w-40 h-24 md:w-44 md:h-[6.5rem] object-center object-cover"
       />
     </a>

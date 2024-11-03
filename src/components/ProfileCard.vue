@@ -18,7 +18,7 @@ const props = defineProps({
       <HoverCardTrigger>
         <img
           :src="props.author.avatar"
-          alt=""
+          alt="avatar"
           className="w-5 h-5 rounded-full"
         />
       </HoverCardTrigger>

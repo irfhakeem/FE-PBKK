@@ -52,7 +52,7 @@ const router = createRouter({
       name: "lists",
       component: () => import("../views/Lists.vue"),
       props: (route) => ({ username: route.params.username }),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
     },
     {
       path: "/:catchAll(.*)",
