@@ -93,8 +93,10 @@ const handleLogout = () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Library class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
-                  <a href="/profile/bookmark" class="sm:text-sm text-xs w-full"
-                    >Bookmark</a
+                  <a
+                    :href="'/profile/' + props.userUsername + '/lists'"
+                    class="sm:text-sm text-xs w-full"
+                    >Lists</a
                   >
                 </DropdownMenuItem>
                 <DropdownMenuItem>
