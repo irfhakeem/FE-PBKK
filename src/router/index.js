@@ -15,11 +15,10 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: "/setting",
-      name: "setting",
+      path: "/settings",
+      name: "settings",
       component: () => import("../views/Setting.vue"),
-      // comment for testing purposes 
-      // meta: { requiresAuth: true }, 
+      meta: { requiresAuth: true },
     },
     {
       path: "/register",
@@ -31,13 +30,13 @@ const router = createRouter({
       name: "login",
       component: () => import("../views/Login.vue"),
     },
-      {
-        path: "/profile/:username",
-        name: "profile",
-        component: () => import("../views/Profile.vue"),
-        props: (route) => ({ username: route.params.username }),
-        // meta: { requiresAuth: true },
-      },
+    {
+      path: "/profile/:username",
+      name: "profile",
+      component: () => import("../views/Profile.vue"),
+      props: (route) => ({ username: route.params.username }),
+      meta: { requiresAuth: true },
+    },
     {
       path: "/:username/:postId",
       name: "post",
@@ -46,6 +45,13 @@ const router = createRouter({
         username: route.params.username,
         postId: route.params.postId,
       }),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/profile/:username/lists",
+      name: "lists",
+      component: () => import("../views/Lists.vue"),
+      props: (route) => ({ username: route.params.username }),
       meta: { requiresAuth: true },
     },
     {
