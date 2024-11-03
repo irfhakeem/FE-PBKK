@@ -16,16 +16,16 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from "@/components/ui/select";
 
 import { me, userByUsername } from "@/api/user/user.js";
 import { ref, onMounted } from "vue";
@@ -131,7 +131,7 @@ const handleCopyLink = () => {
       </div>
       <!-- List -->
       <Slider
-        :categories="['Home', 'Bookmarks']"
+        :categories="['Home', 'Lists']"
         :activeCategory="activeCategory"
         @update:activeCategory="setActiveCategory"
       />
@@ -149,7 +149,7 @@ const handleCopyLink = () => {
         </div>
       </div>
 
-      <div v-if="activeCategory == 'Bookmarks'">
+      <div v-if="activeCategory == 'Lists'">
         <Card class="w-full">
           <div class="flex">
             <!-- sections -->
@@ -163,37 +163,38 @@ const handleCopyLink = () => {
                     class="w-10 h-10 rounded-full object-cover"
                   />
                   <!-- Username -->
-                  <span class="text-sm font-semibold text-gray-800">user name</span>
+                  <span class="text-sm font-semibold text-gray-800"
+                    >user name</span
+                  >
                 </CardDescription>
-                
+
                 <!-- Card Title -->
-                <CardTitle class ="font-bold ">Reading List</CardTitle>
+                <CardTitle class="font-bold">Reading List</CardTitle>
               </CardHeader>
               <CardFooter class="flex justify-between px-6 pb-6">
                 <p class="text-sm text-gray-600">1 story</p>
-          
+
                 <!-- Options Dropdown -->
                 <div class="relative">
                   <DropdownMenu>
-                  <DropdownMenuTrigger as-child>
-                    <button><Ellipsis aria-hidden="true"></Ellipsis></button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent class="md:w-40 sm:w-48 w-40">
-                    <DropdownMenuItem>Copy link</DropdownMenuItem>
-                    <DropdownMenuItem>Edit list info</DropdownMenuItem>
-                    <DropdownMenuItem>Remove items</DropdownMenuItem>
-                    <!-- if list is private -->
-                    <DropdownMenuItem>Make list public</DropdownMenuItem>
+                    <DropdownMenuTrigger as-child>
+                      <button><Ellipsis aria-hidden="true"></Ellipsis></button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent class="md:w-40 sm:w-48 w-40">
+                      <DropdownMenuItem>Copy link</DropdownMenuItem>
+                      <DropdownMenuItem>Edit list info</DropdownMenuItem>
+                      <DropdownMenuItem>Remove items</DropdownMenuItem>
+                      <!-- if list is private -->
+                      <DropdownMenuItem>Make list public</DropdownMenuItem>
 
-                    <DropdownMenuItem>Reorder items</DropdownMenuItem>
-                    <DropdownMenuItem>Hide responses</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                </div> 
+                      <DropdownMenuItem>Reorder items</DropdownMenuItem>
+                      <DropdownMenuItem>Hide responses</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </CardFooter>
             </div>
             <div class="flex-[0.25] bg-red-100">
-              ini isinya gambar dari story :)
               <!-- fill with story banner klo ada-->
             </div>
             <div class="flex-[0.15] bg-green-100 ml-1">
@@ -206,7 +207,6 @@ const handleCopyLink = () => {
         </Card>
       </div>
     </div>
-
 
     <div class="hidden lg:flex md:col-span-1 sticky top-0 h-screen">
       <div class="mt-10 mr-auto ml-10">
