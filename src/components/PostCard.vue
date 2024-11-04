@@ -1,15 +1,27 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { Heart, Clock, MessageCircle } from "lucide-vue-next";
 import ProfielCard from "@/components/ProfileCard.vue";
 import { formatDate } from "@/lib/formatDate";
+import { userByUsername } from "@/api/user/user.js";
+import BookmarkButton from "./BookmarkButton.vue";
 
-// Need Modify
 const props = defineProps({
   author: Object,
-  userID: String,
+  authorUsername: String,
   post: Object,
 });
+
+const author = ref(props.author || {});
+
+const fetchAuthor = async () => {
+  if (props.authorUsername) {
+    author.value = await userByUsername(props.authorUsername);
+  }
+};
+
+onMounted(fetchAuthor);
+watch(() => props.authorUsername, fetchAuthor);
 
 const infoPost = ref([
   {
@@ -32,14 +44,14 @@ const infoPost = ref([
 
 <template>
   <div class="mb-3">
-    <ProfielCard :author="author" :userID="userID" />
+    <ProfielCard :author="author" />
   </div>
   <div
-    className="grid sm:grid-cols-3 border-b-2 sm:mb-10 sm:pb-10 border-gray-100"
+    className="grid sm:grid-cols-3 border-b-2 pb-5 sm:mb-5 sm:pb-10 border-gray-100"
   >
     <div className="col-span-2 flex-col ">
       <a
-        :href="'/' + props.author.username + '/' + props.post.id"
+        :href="'/' + author.username + '/' + props.post.id"
         className="col-span-1 flex justify-center lg:justify-end items-center visible sm:hidden"
       >
         <img
@@ -48,7 +60,7 @@ const infoPost = ref([
           className="w-full h-24 md:w-44 md:h-[6.5rem] object-center object-cover mb-5"
         />
       </a>
-      <a :href="'/' + props.author.username + '/' + props.post.id">
+      <a :href="'/' + author.username + '/' + props.post.id">
         <span
           className="text-lg md:textxl lg:text-2xl text-black font-bold line-clamp-2"
         >
@@ -75,16 +87,11 @@ const infoPost = ref([
             </template>
           </div>
         </div>
-        <!-- <BookmarkButton
-          isBookmarked="{isBookmarked}"
-          userId="{currentUser}"
-          postId="{id}"
-          custom="h-auto w-5 text-gray-500 hover:text-black"
-        /> -->
+        <BookmarkButton :postId="post.id" />
       </div>
     </div>
     <a
-      :href="'/' + props.author.username + '/' + props.post.id"
+      :href="'/' + author.username + '/' + props.post.id"
       className="hidden sm:visible sm:col-span-1 sm:flex justify-center lg:justify-end items-center"
     >
       <img
