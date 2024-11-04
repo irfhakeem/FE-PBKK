@@ -7,7 +7,6 @@ import {
   updateUser,
 } from "@/api/user/user.js";
 import { ref, onMounted } from "vue";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
