@@ -111,8 +111,8 @@ const tags = [
         :activeCategory="activeCategory"
         @update:activeCategory="setActiveCategory"
       />
-      <div class="flex flex-col gap-5">
-        <div v-for="post in posts" :key="post.id" class="mb-3">
+      <div class="flex flex-col">
+        <div v-for="post in posts" :key="post.id">
           <PostCard :post="post" :authorUsername="post.authorUsername" />
         </div>
       </div>
