@@ -15,26 +15,25 @@ const props = defineProps({
 
 // State management
 const listed = ref(false);
-const listedId = ref(null); // To store the ID of the list where the post is listed
+const listedId = ref(null);
 const lists = ref([]);
 const isDropdownOpen = ref(false);
 const isModalOpen = ref(false);
 const newListTitle = ref("");
-const checkboxStates = ref({}); // Object to track individual checkbox states
+const checkboxStates = ref({});
 
 // Lifecycle hooks
 onMounted(async () => {
   const postListing = await isPostListed({ postId: props.postId });
   listed.value = postListing.isListed;
-  listedId.value = postListing.listedId; // Assume the API returns the listedId
+  listedId.value = postListing.listId;
   lists.value = await getMyLists();
 
   // Initialize checkbox states based on the lists
   lists.value.forEach((list) => {
-    checkboxStates.value[list.id] = false; // Default to unchecked
-    // Check the checkbox if the post is listed in the current list
+    checkboxStates.value[list.id] = false;
     if (listed.value && list.id === listedId.value) {
-      checkboxStates.value[list.id] = true; // Set checkbox to checked
+      checkboxStates.value[list.id] = true;
     }
   });
 });
@@ -83,8 +82,8 @@ const createListHandler = async () => {
 
   const newList = await createList({ title: newListTitle.value });
   lists.value.push(newList);
-  checkboxStates.value[newList.id] = false; // Initialize new checkbox state
-  newListTitle.value = ""; // Reset input
+  checkboxStates.value[newList.id] = false;
+  newListTitle.value = "";
   closeModal();
 };
 
@@ -129,7 +128,7 @@ const handleClickOutside = (event) => {
               :id="list.id"
               :value="list.id"
               v-model="checkboxStates[list.id]"
-              class="appearance-none h-4 w-4 border border-gray-300 rounded-sm checked:bg-black checked:border-black focus:outline-none focus:ring-2 focus:ring-black cursor-pointer relative"
+              class="h-4 w-4 border border-gray-300 rounded-sm focus:outline-none cursor-pointer relative"
             />
             <label :for="list.id" class="ml-2 text-sm cursor-pointer">
               {{ list.title }}
@@ -160,7 +159,7 @@ const handleClickOutside = (event) => {
         @click.stop
       >
         <div class="mb-4">
-          <h2 class="text-lg font-semibold">Create New List</h2>
+          <h2 class="text-lg font-semibold text-black">Create New List</h2>
         </div>
 
         <div class="mb-4">
