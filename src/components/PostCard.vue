@@ -1,11 +1,10 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import { Heart, Clock, MessageCircle } from "lucide-vue-next";
+import { Heart, MessageCircle } from "lucide-vue-next";
 import ProfielCard from "@/components/ProfileCard.vue";
 import { formatDate } from "@/lib/formatDate";
 import { userByUsername } from "@/api/user/user.js";
 import BookmarkButton from "./BookmarkButton.vue";
-import LikeButton from "./LikeButton.vue";
 
 const props = defineProps({
   author: Object,
@@ -23,24 +22,6 @@ const fetchAuthor = async () => {
 
 onMounted(fetchAuthor);
 watch(() => props.authorUsername, fetchAuthor);
-
-const infoPost = ref([
-  {
-    info: "time",
-    icon: Clock,
-    value: formatDate(props.post.createdAt),
-  },
-  {
-    info: "totalLikes",
-    icon: Heart,
-    value: "99k",
-  },
-  {
-    info: "totalComments",
-    icon: MessageCircle,
-    value: 99,
-  },
-]);
 </script>
 
 <template>
@@ -77,9 +58,20 @@ const infoPost = ref([
         className="flex justify-between text-gray-500 text-xs font-medium items-center"
       >
         <div className="flex gap-5 items-center justify-center">
-          <LikeButton :like="post.likeCount" :postId="post.id" />
+          <div class="flex flex-row gap-2 items-center">
+            <span class="">{{ formatDate(props.post.createdAt) }}</span>
+          </div>
+          <!-- <LikeButton :like="props.post.likeCount" :postId="props.post.id" /> -->
+          <div class="flex flex-row gap-2 items-center">
+            <Heart class="w-4 h-4 fill-gray-500" />
+            <span>{{ props.post.likeCount }}</span>
+          </div>
+          <div class="flex flex-row gap-2 items-center">
+            <MessageCircle class="w-4 h-4 fill-gray-500" />
+            <span>{{ props.post.commentCount }}</span>
+          </div>
         </div>
-        <BookmarkButton :postId="post.id" />
+        <BookmarkButton :postId="props.post.id" />
       </div>
     </div>
     <a
