@@ -118,7 +118,7 @@ const tags = [
       </div>
     </div>
     <div class="hidden lg:flex lg:flex-col md:col-span-1 sticky top-0 h-screen">
-      <div class="flex flex-col pt-10 pr-auto pl-10 gap-10">
+      <div class="flex flex-col py-10 pr-auto pl-10 gap-10">
         <div class="flex flex-col gap-4">
           <p class="font-medium sm:text-sm text-xs text-black">
             Recommended topics
