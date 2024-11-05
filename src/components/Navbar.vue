@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, User, Library, Search } from "lucide-vue-next";
+import { LogOut, Settings, User, Library, Search, PenLine } from "lucide-vue-next";
 import { logoutUser } from "@/api/auth/auth.js";
 
 const isSearchBarVisible = ref(false);
@@ -83,6 +83,14 @@ const handleLogout = () => {
               <DropdownMenuLabel>{{ props.userUsername }}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
+                <DropdownMenuItem>
+                  <PenLine class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
+                  <a
+                    :href="'/write/'"
+                    class="sm:text-sm text-xs w-full"
+                    >Write</a
+                  >
+                </DropdownMenuItem>
                 <DropdownMenuItem>
                   <User class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
                   <a
