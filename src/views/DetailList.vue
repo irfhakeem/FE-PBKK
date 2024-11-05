@@ -97,7 +97,9 @@ onMounted(async () => {
           </div>
         </div>
       </div>
-      <h1 class="text-3xl font-bold text-gray-900 my-5">{{ list.title }}</h1>
+      <h1 class="text-3xl font-bold text-gray-900 mt-5 mb-10">
+        {{ list.title }}
+      </h1>
       <!--
         Ini nanti pake v-for untuk menampilkan semua posts, untuk testing pake div biasa dulu
        -->
