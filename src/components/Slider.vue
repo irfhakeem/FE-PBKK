@@ -20,7 +20,7 @@ const updateCategory = (category) => {
 </script>
 
 <template>
-  <div class="sticky top-0 bg-white">
+  <div class="sticky top-0 bg-white z-10">
     <div class="relative mb-10 py-4 border-b-[2px] border-gray-100">
       <a
         v-for="category in categories"
