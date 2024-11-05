@@ -52,20 +52,22 @@ const navigateToLink = () => {
             <img
               :src="author.avatar"
               alt="User avatar"
-              class="w-10 h-10 rounded-full object-cover"
+              class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
             />
             <!-- Username -->
-            <span class="text-sm font-semibold text-gray-800">{{
+            <span class="text-[11px] sm:text-sm font-semibold text-gray-800">{{
               author.name
             }}</span>
           </CardDescription>
 
           <!-- Card Title -->
-          <CardTitle class="font-bold">{{ props.list.title }}</CardTitle>
+          <CardTitle class="font-bold text-base sm:text-xl">{{
+            props.list.title
+          }}</CardTitle>
         </CardHeader>
         <CardFooter class="flex justify-between px-6 pb-6">
           <p class="text-sm text-gray-600">
-            <!-- {{ props.list.post.length }} Posts -->
+            {{ props.list.posts.length }} Posts
           </p>
 
           <!-- Options Dropdown -->
@@ -75,10 +77,16 @@ const navigateToLink = () => {
                 <button><Ellipsis aria-hidden="true"></Ellipsis></button>
               </DropdownMenuTrigger>
               <DropdownMenuContent class="md:w-40 sm:w-48 w-40">
-                <DropdownMenuItem>Copy link</DropdownMenuItem>
+                <DropdownMenuItem class="sm:text-sm text-xs"
+                  >Copy link</DropdownMenuItem
+                >
                 <!-- <div v-if=""></div> -->
-                <DropdownMenuItem>Edit list info</DropdownMenuItem>
-                <DropdownMenuItem>Remove items</DropdownMenuItem>
+                <DropdownMenuItem class="sm:text-sm text-xs"
+                  >Edit list info</DropdownMenuItem
+                >
+                <DropdownMenuItem class="sm:text-sm text-xs"
+                  >Remove items</DropdownMenuItem
+                >
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
