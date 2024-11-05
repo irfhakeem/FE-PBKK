@@ -5,6 +5,7 @@ import ProfielCard from "@/components/ProfileCard.vue";
 import { formatDate } from "@/lib/formatDate";
 import { userByUsername } from "@/api/user/user.js";
 import BookmarkButton from "./BookmarkButton.vue";
+import LikeButton from "./LikeButton.vue";
 
 const props = defineProps({
   author: Object,
@@ -43,7 +44,7 @@ const infoPost = ref([
 </script>
 
 <template>
-  <div class="mb-3">
+  <div class="mb-3 pt-5">
     <ProfielCard :author="author" />
   </div>
   <div
@@ -76,16 +77,7 @@ const infoPost = ref([
         className="flex justify-between text-gray-500 text-xs font-medium items-center"
       >
         <div className="flex gap-5 items-center justify-center">
-          <div
-            v-for="(info, index) in infoPost"
-            :key="index"
-            class="flex gap-1 items-center"
-          >
-            <template v-if="info.value !== 0">
-              <component :is="info.icon" class="h-auto w-5" />
-              {{ info.value }}
-            </template>
-          </div>
+          <LikeButton :like="post.likeCount" :postId="post.id" />
         </div>
         <BookmarkButton :postId="post.id" />
       </div>
