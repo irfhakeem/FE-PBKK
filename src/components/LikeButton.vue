@@ -36,11 +36,11 @@ const likeHandler = async () => {
 </script>
 
 <template>
-  <div class="flex flex-row items-center">
-    <button class="w-10 h-10" @click="likeHandler">
-      <Heart :class="userLiked ? 'text-red-500' : 'text-gray-400'" />
+  <div class="flex flex-row items-center gap-2">
+    <button @click="likeHandler">
+      <Heart :class="userLiked ? 'fill-red-500 w-6 h-6' : ' w-6 h-6'" />
     </button>
-    <span>{{ likeCount }}</span>
+    <span class="text-gray-500">{{ likeCount }}</span>
   </div>
 </template>
 
