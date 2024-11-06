@@ -44,7 +44,7 @@ watch(() => props.authorUsername, fetchAuthor);
       </a>
       <a :href="'/' + author.username + '/' + props.post.id">
         <span
-          className="text-lg md:textxl lg:text-2xl text-black font-bold line-clamp-2"
+          className="text-lg md:text-xl lg:text-2xl text-black font-bold line-clamp-2"
         >
           {{ props.post.title }}
         </span>
