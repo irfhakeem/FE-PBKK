@@ -49,7 +49,7 @@ const router = createRouter({
     },
     {
       path: "/profile/:username/lists/:listId",
-      name: "lists",
+      name: "detailLists",
       component: () => import("../views/DetailList.vue"),
       props: (route) => ({
         username: route.params.username,
@@ -62,6 +62,12 @@ const router = createRouter({
       name: "write",
       component: () => import("../views/WritePage.vue"),
       props: (route) => ({ username: route.params.username }),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/lists",
+      name: "lists",
+      component: () => import("../views/Lists.vue"),
       meta: { requiresAuth: true },
     },
     {
