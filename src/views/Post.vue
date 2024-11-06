@@ -1,23 +1,27 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { formatDate } from "@/lib/formatDate";
-import { getPostById, getPosts } from "@/api/post/post.js";
+import {
+  getPostById,
+  getPosts,
+  postComment,
+  deleteComment,
+  getComments,
+} from "@/api/post/post.js";
 import { me, userByUsername } from "@/api/user/user.js";
 import Navbar from "../components/Navbar.vue";
-import { Bell } from "lucide-vue-next";
+import { Bell, MessageCircle, X, Ellipsis } from "lucide-vue-next";
 import ProfileCard from "../components/ProfileCard.vue";
 import LikeButton from "../components/LikeButton.vue";
 import FollowButton from "../components/FollowButton.vue";
 import BookmarkButton from "../components/BookmarkButton.vue";
-import { MessageCircle } from "lucide-vue-next";
 import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const route = useRoute();
 const post = ref({});
@@ -26,6 +30,18 @@ const author = ref({});
 const user = ref({});
 const isMyProfile = ref(false);
 const loading = ref(true);
+const isCommentSheetOpen = ref(false);
+const commentContent = ref("");
+const comments = ref([]);
+
+const toggleCommentSheet = () => {
+  isCommentSheetOpen.value = !isCommentSheetOpen.value;
+  if (isCommentSheetOpen.value) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
+};
 
 onMounted(async () => {
   post.value = await getPostById(route.params.postId);
@@ -43,9 +59,46 @@ onMounted(async () => {
     userId: author.value.id,
     limit: 4,
   });
-  console.log(post.value);
+
+  comments.value = await getComments({ postId: post.value.id });
   loading.value = false;
 });
+
+const handleClickOutside = (event) => {
+  const sheet = document.querySelector(".comment-sheet");
+  const trigger = document.querySelector(".comment-trigger");
+
+  if (
+    sheet &&
+    !sheet.contains(event.target) &&
+    !trigger.contains(event.target)
+  ) {
+    isCommentSheetOpen.value = false;
+    document.body.style.overflow = "auto";
+  }
+};
+
+onUnmounted(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
+
+const handleDeleteComment = async (commentId) => {
+  await deleteComment(commentId);
+  const index = comments.value.findIndex((comment) => comment.id === commentId);
+  if (index !== -1) {
+    comments.value.splice(index, 1);
+    post.value.commentCount--;
+  }
+};
+
+const handleSubmitComment = async (postId) => {
+  const response = await postComment({
+    postId: postId,
+    content: commentContent.value,
+  });
+  comments.value.unshift(response);
+  post.value.commentCount++;
+};
 </script>
 
 <template>
@@ -77,75 +130,132 @@ onMounted(async () => {
         >
           <div class="flex gap-5 items-center justify-center">
             <LikeButton :like="post.likeCount" :postId="post.id" />
-            <Sheet>
-              <SheetTrigger as-child>
-                <button>
-                  <MessageCircle aria-hidden="true" />
-                </button>
-                <span class="ml-[-10px]">{{ post.commentCount }}</span>
-              </SheetTrigger>
-              <SheetContent class="w-[400px] sm:w-[540px]">
-                <SheetHeader>
-                  <SheetTitle class="text-bold text-lg sm:text-xl"
-                    >Responses ({{ post.commentCount }})</SheetTitle
-                  >
-                </SheetHeader>
-                <div class="mt-6 mb-5 border-b-[1px] pb-10 border-gray-200">
-                  <div
-                    class="flex flex-col justify-center bg-white shadow-md p-4 gap-4"
-                  >
-                    <div class="flex items-center gap-4">
-                      <img :src="user.avatar" class="h-8 w-8" alt="" />
-                      <p class="text-xs sm:text-sm">{{ user.name }}</p>
-                    </div>
-                    <textarea
-                      id="content"
-                      value=""
-                      class="min-h-24 bg-gray-100 border-none w-full px-4 py-2 text-[13px] resize-none"
-                      :maxlength="500"
-                      placeholder="Write a comment..."
-                      @input="
-                        bioLength = length($event.target.value);
-                        $event.target.style.height = 'auto';
-                        $event.target.style.height =
-                          $event.target.scrollHeight + 'px';
-                      "
-                    ></textarea>
-                    <div class="flex justify-end gap-4">
-                      <button class="text-xs font-medium">Cancel</button>
-                      <button
-                        class="text-xs font-medium bg-[#37823a] px-3 py-2 rounded-3xl text-white disabled:bg-[#37823a]/30"
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <p class="text-sm font-semibold mb-8">Latest</p>
-                <div>
-                  <div
-                    class="flex flex-col gap-4 border-b-2 border-gray-100 pb-10"
-                  >
-                    <div class="flex items-center gap-3">
-                      <img :src="user.avatar" class="w-8 h-8" alt="" />
-                      <div class="flex flex-col justify-start items-start">
-                        <p class="text-sm">Testing</p>
-                        <p class="text-gray-500 text-xs">4 months ago</p>
-                      </div>
-                    </div>
-                    <p class="text-xs">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Ut dolore, esse enim ipsum temporibus repellat fugit
-                      dignissimos odio nulla, totam ducimus quo natus ullam vero
-                      vitae ratione. Laborum, culpa debitis!
-                    </p>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
+            <button
+              @click="toggleCommentSheet"
+              class="comment-trigger flex items-center"
+            >
+              <MessageCircle aria-hidden="true" />
+              <span class="ml-1">{{ post.commentCount }}</span>
+            </button>
           </div>
           <div class="flex gap-5">
             <BookmarkButton :postId="post.id" />
+          </div>
+        </div>
+
+        <!-- Custom Comment Sheet -->
+        <div
+          v-if="isCommentSheetOpen"
+          class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-end"
+        >
+          <div
+            class="comment-sheet bg-white w-[400px] sm:w-[540px] h-full flex flex-col"
+          >
+            <!-- Header -->
+            <div class="p-6 border-b border-gray-200">
+              <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold">
+                  Responses ({{ post.commentCount }})
+                </h2>
+                <button
+                  @click="toggleCommentSheet"
+                  class="p-2 hover:bg-gray-100 rounded-full"
+                >
+                  <X class="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+
+            <!-- Comment Form -->
+            <div class="p-6 border-b border-gray-200">
+              <div class="flex flex-col gap-4 bg-white shadow-md p-4">
+                <div class="flex items-center gap-4">
+                  <img :src="user.avatar" class="h-8 w-8 rounded-full" alt="" />
+                  <p class="text-sm">{{ user.name }}</p>
+                </div>
+                <textarea
+                  v-model="commentContent"
+                  class="min-h-24 bg-gray-100 border-none w-full px-4 py-2 text-sm resize-none rounded-md"
+                  maxlength="500"
+                  placeholder="Write a comment..."
+                  @input="
+                    $event.target.style.height = 'auto';
+                    $event.target.style.height =
+                      $event.target.scrollHeight + 'px';
+                  "
+                ></textarea>
+                <div class="flex justify-end gap-4">
+                  <button
+                    @click="toggleCommentSheet"
+                    class="text-sm font-medium px-4 py-2 hover:bg-gray-100 rounded-md"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    @click="handleSubmitComment(post.id)"
+                    class="text-sm font-medium bg-[#37823a] px-4 py-2 rounded-full text-white disabled:bg-[#37823a]/30 hover:bg-[#295d2a]"
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comments List - Scrollable Area -->
+            <div class="flex-1 overflow-y-auto">
+              <div class="p-6">
+                <p class="text-sm font-semibold mb-6">Latest</p>
+                <div class="space-y-8">
+                  <!-- Sample comments - Replace with actual comments data -->
+                  <div
+                    v-for="comment in comments"
+                    :key="comment.id"
+                    class="pb-6 border-b border-gray-100"
+                  >
+                    <div class="flex items-start justify-between">
+                      <div class="flex items-center gap-3 mb-3">
+                        <img
+                          :src="user.avatar"
+                          class="w-8 h-8 rounded-full"
+                          alt=""
+                        />
+                        <div>
+                          <p class="text-sm font-medium">{{ user.name }}</p>
+                          <p class="text-xs text-gray-500">
+                            {{ formatDate(comment.createdAt) }}
+                          </p>
+                        </div>
+                      </div>
+                      <div>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger as-child>
+                            <button>
+                              <Ellipsis
+                                aria-hidden="true"
+                                class="h-4 w-4"
+                              ></Ellipsis>
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent class="md:w-40 sm:w-36 w-32">
+                            <DropdownMenuItem>
+                              <button
+                                @click="handleDeleteComment(comment.id)"
+                                class="text-xs w-full text-red-700 font-medium"
+                              >
+                                Delete Comment
+                              </button>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </div>
+                    <p class="text-sm text-gray-700">
+                      {{ comment.content }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -186,6 +296,7 @@ onMounted(async () => {
           </div>
         </div>
       </div>
+
       <div className="flex flex-col gap-7">
         <div
           className="grid-flow-row items-center border-y-[1px] border-gray-200"
@@ -229,3 +340,29 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.comment-sheet {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.overflow-y-auto::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.overflow-y-auto {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+</style>
