@@ -27,8 +27,6 @@ const props = defineProps({
 const author = ref({});
 const list = ref(props.list);
 
-console.log(list.value);
-
 const fetchAuthor = async () => {
   if (props.authorUsername) {
     author.value = await userByUsername(props.authorUsername);
@@ -61,14 +59,14 @@ const handleCopyLink = () => {
   <Card class="w-full cursor-pointer mb-5">
     <div class="flex flex-row justify-between">
       <!-- sections -->
-      <div class="flex-[0.55] bg-gray-100">
+      <div class="flex-[0.55] bg-[#f9f9f9]">
         <CardHeader @click="navigateToLink">
           <CardDescription class="flex items-center gap-2">
             <!-- User Avatar -->
             <img
               :src="author.avatar"
               alt="User avatar"
-              class="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
+              class="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover"
             />
             <!-- Username -->
             <span class="text-[11px] sm:text-sm font-semibold text-gray-800">{{
@@ -128,19 +126,22 @@ const handleCopyLink = () => {
         </div>
         <div
           v-else
-          v-for="(post, index) in list.posts.slice(0, 3)"
-          :key="post.id"
+          v-for="(post, index) in 3"
+          :key="index"
           :class="{
             'flex-[0.5]': index === 0,
             'flex-[0.3]': index === 1,
             'flex-[0.2]': index === 2,
           }"
         >
-          <img
-            :src="post.image"
-            alt="Post image"
-            class="h-full w-auto object-cover"
-          />
+          <div v-if="list.posts[index]" class="h-full">
+            <img
+              :src="list.posts[index].image"
+              alt="Post image"
+              class="h-full w-full object-cover"
+            />
+          </div>
+          <div v-else class="flex-1 bg-gray-200 h-full"></div>
         </div>
       </div>
     </div>
