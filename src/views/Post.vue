@@ -220,7 +220,9 @@ const handleSubmitComment = async (postId) => {
                           alt=""
                         />
                         <div>
-                          <p class="text-sm font-medium">{{ user.name }}</p>
+                          <p class="text-sm font-medium">
+                            {{ comment.user.name }}
+                          </p>
                           <p class="text-xs text-gray-500">
                             {{ formatDate(comment.createdAt) }}
                           </p>
@@ -229,7 +231,7 @@ const handleSubmitComment = async (postId) => {
                       <div>
                         <DropdownMenu>
                           <DropdownMenuTrigger as-child>
-                            <button>
+                            <button v-if="comment.userId === user.id">
                               <Ellipsis
                                 aria-hidden="true"
                                 class="h-4 w-4"
