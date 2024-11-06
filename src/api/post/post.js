@@ -75,3 +75,31 @@ export const isLiked = async (data) => {
     throw new Error("Failed to check if post is liked");
   }
 };
+
+export const postComment = async (data) => {
+  try {
+    const response = await apiClient.post("/comment", data);
+    return response.data.data;
+  } catch (error) {
+    throw new Error("Failed to post comment");
+  }
+};
+
+export const deleteComment = async (commentId) => {
+  try {
+    await apiClient.delete("/uncomment", {
+      data: { commentId },
+    });
+  } catch (error) {
+    throw new Error("Failed remove comment");
+  }
+};
+
+export const getComments = async (data) => {
+  try {
+    const response = await apiClient.post("/comments", data);
+    return response.data.data;
+  } catch (error) {
+    throw new Error("Failed get comments");
+  }
+};
