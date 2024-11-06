@@ -9,6 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@editorjs/code": "^2.9.2",
+    "@editorjs/editorjs": "^2.30.6",
+    "@editorjs/embed": "^2.7.6",
+    "@editorjs/header": "^2.8.8",
+    "@editorjs/image": "^2.10.0",
     "@vueuse/core": "^11.2.0",
     "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
