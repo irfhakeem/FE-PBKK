@@ -71,6 +71,13 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/tag/:tagName",
+      name: "tag",
+      component: () => import("../views/Tag.vue"),
+      props: (route) => ({ tagName: route.params.tagName }),
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/:catchAll(.*)",
       name: "not-found",
       component: () => import("../views/NotFound.vue"),
