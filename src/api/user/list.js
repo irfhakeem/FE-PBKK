@@ -74,9 +74,11 @@ export const removePostFromList = async (data) => {
   }
 };
 
-export const deleteList = async (data) => {
+export const deleteList = async (listId) => {
   try {
-    const response = await apiClient.delete("/delete", data);
+    const response = await apiClient.delete("/delete", {
+      data: { listId },
+    });
     return response.data.data;
   } catch (error) {
     throw new Error("Failed to delete list");
