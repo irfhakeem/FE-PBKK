@@ -6,6 +6,7 @@ import { ref, onMounted, watch } from "vue";
 import Slider from "../components/Slider.vue";
 import FollowButton from "../components/FollowButton.vue";
 import PostCard from "../components/PostCard.vue";
+import { recommendedTags } from "@/api/tag/tag.js";
 
 const user = ref({
   id: "",
@@ -21,6 +22,7 @@ const following = ref([]);
 const posts = ref([]);
 const peeps = ref([]);
 const activeCategory = ref("For You");
+const tags = ref([]);
 
 const setActiveCategory = (category) => {
   activeCategory.value = category;
@@ -49,55 +51,13 @@ onMounted(async () => {
   following.value = await getFollowing();
   user.value = await me();
   peeps.value = await getRandomUsers();
+  tags.value = await recommendedTags();
   await fetchPosts();
 });
 
 watch(activeCategory, async () => {
   await fetchPosts();
 });
-
-const tags = [
-  {
-    id: 1,
-    title: "React",
-  },
-  {
-    id: 2,
-    title: "Vue",
-  },
-  {
-    id: 3,
-    title: "Angular",
-  },
-  {
-    id: 4,
-    title: "Svelte",
-  },
-  {
-    id: 5,
-    title: "Next.js",
-  },
-  {
-    id: 6,
-    title: "Nuxt.js",
-  },
-  {
-    id: 7,
-    title: "Gatsby",
-  },
-  {
-    id: 8,
-    title: "Gridsome",
-  },
-  {
-    id: 9,
-    title: "Sapper",
-  },
-  {
-    id: 10,
-    title: "Redwood",
-  },
-];
 </script>
 
 <template>
@@ -126,9 +86,9 @@ const tags = [
           <div class="flex flex-wrap gap-x-2 gap-y-4">
             <div v-for="tag in tags" :key="tag.id">
               <a
-                href="/"
+                :href="'/tag/' + tag.name"
                 class="bg-[#f2f2f2] rounded-full px-4 py-2 text-xs font-medium"
-                >{{ tag.title }}</a
+                >{{ tag.name }}</a
               >
             </div>
           </div>
