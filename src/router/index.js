@@ -12,13 +12,13 @@ const router = createRouter({
       path: "/home",
       name: "home",
       component: () => import("../views/HomeView.vue"),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
     },
     {
       path: "/settings",
       name: "settings",
       component: () => import("../views/Setting.vue"),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
     },
     {
       path: "/register",
@@ -35,7 +35,7 @@ const router = createRouter({
       name: "profile",
       component: () => import("../views/Profile.vue"),
       props: (route) => ({ username: route.params.username }),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
     },
     {
       path: "/:username/:postId",
@@ -45,7 +45,7 @@ const router = createRouter({
         username: route.params.username,
         postId: route.params.postId,
       }),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
     },
     {
       path: "/profile/:username/lists/:listId",
@@ -55,7 +55,14 @@ const router = createRouter({
         username: route.params.username,
         listId: route.params.listId,
       }),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
+    },
+    {
+      path: "/write",
+      name: "write",
+      component: () => import("../views/WritePage.vue"),
+      props: (route) => ({ username: route.params.username }),
+      // meta: { requiresAuth: true },
     },
     {
       path: "/:catchAll(.*)",
