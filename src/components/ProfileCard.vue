@@ -23,7 +23,10 @@ const props = defineProps({
         />
       </HoverCardTrigger>
       <HoverCardTrigger>
-        <a href="" className="text-xs hover:underline flex items-center gap-2">
+        <a
+          :href="'/profile/' + author.username"
+          className="text-xs hover:underline flex items-center gap-2"
+        >
           {{ author.name }}
         </a>
       </HoverCardTrigger>
