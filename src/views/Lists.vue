@@ -21,7 +21,7 @@ onMounted(async () => {
   <Navbar :user-username="user.username" :user-photo="user.avatar" />
   <div
     v-if="!isLoading"
-    class="flex flex-col lg:max-w-6xl lg:mx-auto py-10 px-6 md:px-8 gap-6"
+    class="flex flex-col lg:max-w-6xl lg:mx-auto pt-10 px-6 md:px-8 gap-6"
   >
     <p
       class="text-2xl md:text-4xl font-semibold border-b-2 border-gray-100 pb-6"
