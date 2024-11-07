@@ -54,7 +54,7 @@ onMounted(async () => {
       <div
         class="flex flex-col border-t-2 border-gray-100 py-6 w-full gap-6 sm:gap-10"
       >
-        <p class="sm:text-2xl text-lg font-semibold">Recommended stories</p>
+        <p class="sm:text-2xl text-lg font-semibold">Recommended Posts</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:gap-10 gap-5">
           <div v-for="(post, index) in posts.slice(0, 2)" :key="post.id">
             <PostCard2 :post="post" :authorUsername="post.authorUsername" />
@@ -78,10 +78,10 @@ onMounted(async () => {
 
       <!-- button more -->
       <a
-        :href="'/'"
+        :href="'/tag/' + tag + '/recommended/post'"
         className="border-[1px] rounded-full border-black text-black text-sm font-medium py-2 px-4 hover:bg-black hover:text-white"
       >
-        See more from stories
+        See more from posts
       </a>
     </div>
 
@@ -90,7 +90,7 @@ onMounted(async () => {
       class="flex flex-col lg:max-w-6xl lg:mx-auto px-6 md:px-8 mt-8 items-start"
     >
       <div class="flex flex-col border-t-2 border-gray-100 py-6 w-full gap-10">
-        <p class="sm:text-2xl text-lg font-semibold">Recommended List</p>
+        <p class="sm:text-2xl text-lg font-semibold">Recommended Lists</p>
         <div class="grid sm:grid-cols-2 grid-flow-row md:gap-x-10 gap-5">
           <div v-for="(list, index) in lists.slice(0, 4)" :key="list.id">
             <ListCard :authorUsername="list.username" :list="list" />
@@ -98,10 +98,10 @@ onMounted(async () => {
         </div>
       </div>
       <a
-        :href="'/'"
+        :href="'/tag/' + tag + '/recommended/list'"
         className="border-[1px] rounded-full border-black text-black text-sm font-medium py-2 px-4 hover:bg-black hover:text-white"
       >
-        See more from stories
+        See more from lists
       </a>
     </div>
 
@@ -111,10 +111,8 @@ onMounted(async () => {
     >
       <div class="flex flex-col border-t-2 border-gray-100 py-6 w-full gap-10">
         <p class="sm:text-2xl text-lg font-semibold">Recommended Users</p>
-        <div
-          class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-flow-row md:gap-x-10 gap-5"
-        >
-          <div v-for="user in users" :key="user.id">
+        <div class="flex w-full md:gap-x-8 gap-5 items-center justify-center">
+          <div v-for="(user, index) in users.slice(0, 4)" :key="user.id">
             <Card
               class="w-50 sm:w-56 flex flex-col items-center justify-center"
             >
@@ -147,10 +145,7 @@ onMounted(async () => {
                   :href="'/profile/' + user.username"
                   class="text-xs text-gray-500 font-medium line-clamp-4"
                 >
-                  Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                  Voluptatem dolor aut, et quos deserunt laboriosam aspernatur
-                  libero veritatis! Excepturi ducimus sint iste officia saepe
-                  neque qui obcaecati quibusdam nesciunt? Dignissimos.
+                  {{ user.bio }}
                 </a>
               </CardDescription>
               <CardFooter class="flex w-full">
@@ -164,10 +159,10 @@ onMounted(async () => {
         </div>
       </div>
       <a
-        :href="'/'"
+        :href="'/tag/' + tag + '/recommended/user'"
         className="border-[1px] rounded-full border-black text-black text-sm font-medium py-2 px-4 hover:bg-black hover:text-white"
       >
-        See more from stories
+        See more from users
       </a>
     </div>
   </div>
