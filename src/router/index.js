@@ -85,6 +85,14 @@ const router = createRouter({
         tagName: route.params.tagName,
         type: route.params.type,
       }),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/search",
+      name: "search",
+      component: () => import("../views/Search.vue"),
+      props: (route) => ({ query: route.query.q }),
+      meta: { requiresAuth: true },
     },
     {
       path: "/:catchAll(.*)",
