@@ -136,8 +136,8 @@ const handleSubmitComment = async (postId) => {
               @click="toggleCommentSheet"
               class="comment-trigger flex items-center"
             >
-              <MessageCircle aria-hidden="true" />
-              <span class="ml-1">{{ post.commentCount }}</span>
+              <MessageCircle aria-hidden="true" class="text-gray-500" />
+              <span class="ml-1 text-gray-500">{{ post.commentCount }}</span>
             </button>
           </div>
           <div class="flex gap-5">
