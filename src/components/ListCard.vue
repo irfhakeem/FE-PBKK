@@ -56,7 +56,7 @@ const handleCopyLink = () => {
 
 <!-- Delete List -->
 <template>
-  <Card class="w-full cursor-pointer mb-5">
+  <Card class="w-full cursor-pointer">
     <div class="flex flex-row justify-between">
       <!-- sections -->
       <div class="flex-[0.55] bg-[#f9f9f9]">
