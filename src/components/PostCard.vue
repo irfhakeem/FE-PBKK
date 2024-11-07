@@ -28,9 +28,7 @@ watch(() => props.authorUsername, fetchAuthor);
   <div class="mb-3 pt-5">
     <ProfielCard :author="author" />
   </div>
-  <div
-    className="grid sm:grid-cols-3 border-b-2 pb-5 sm:mb-5 sm:pb-10 border-gray-100"
-  >
+  <div className="grid sm:grid-cols-3 border-b-2 pb-5 sm:pb-10 border-gray-100">
     <div className="col-span-2 flex-col ">
       <a
         :href="'/' + author.username + '/' + props.post.id"
