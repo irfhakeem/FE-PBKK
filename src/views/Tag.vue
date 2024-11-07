@@ -32,7 +32,6 @@ onMounted(async () => {
   posts.value = response.value.posts;
   users.value = response.value.users;
   lists.value = response.value.lists;
-  console.log(lists.value);
   isLoading.value = false;
 });
 </script>
@@ -111,50 +110,42 @@ onMounted(async () => {
     >
       <div class="flex flex-col border-t-2 border-gray-100 py-6 w-full gap-10">
         <p class="sm:text-2xl text-lg font-semibold">Recommended Users</p>
-        <div class="flex w-full md:gap-x-8 gap-5 items-center justify-center">
-          <div v-for="(user, index) in users.slice(0, 4)" :key="user.id">
-            <Card
-              class="w-50 sm:w-56 flex flex-col items-center justify-center"
-            >
-              <CardHeader>
-                <img
-                  :src="user.avatar"
-                  :alt="user.username"
-                  class="w-14 h-14 rounded-full"
-                />
-              </CardHeader>
-              <CardDescription
-                class="flex flex-col gap-4 items-center justify-center mb-4 px-6"
-              >
-                <div class="flex flex-col items-center">
-                  <a
-                    :href="'/profile/' + user.username"
-                    class="md:text-base sm:text-sm text-xs font-semibold line-clamp-1"
-                  >
-                    {{ user.name }}
-                  </a>
-                  <a
-                    :href="'/profile/' + user.username"
-                    class="sm:text-sm text-xs text-gray-500"
-                  >
-                    {{ user.followerCount }} followers
-                  </a>
-                </div>
-
-                <a
-                  :href="'/profile/' + user.username"
-                  class="text-xs text-gray-500 font-medium line-clamp-4"
+        <div class="flex flex-col md:gap-x-8 gap-5 w-full">
+          <div v-for="(user, index) in users.slice(0, 3)" :key="user.id">
+            <div class="mb-5">
+              <!-- Card -->
+              <div class="flex p-8 bg-white gap-5 border-b-2 border-gray-100">
+                <div
+                  class="flex md:flex-row flex-col md:justify-between justify-center md:items-center w-full gap-5 md:gap-0"
                 >
-                  {{ user.bio }}
-                </a>
-              </CardDescription>
-              <CardFooter class="flex w-full">
-                <FollowButton
-                  :followingId="user.id"
-                  :style="'text-xs sm:text-[12px] font-medium rounded-full w-full py-1.5 bg-black text-white'"
-                />
-              </CardFooter>
-            </Card>
+                  <div class="flex items-center gap-4">
+                    <img
+                      :src="user.avatar"
+                      alt="avatar"
+                      class="w-12 h-12 md:w-14 md:h-14 rounded-full"
+                    />
+                    <div class="flex flex-col gap-2">
+                      <a
+                        :href="'/profile/' + user.username"
+                        class="text-lg font-semibold"
+                        >{{ user.name }}</a
+                      >
+                      <a
+                        :href="'/profile/' + user.username"
+                        class="text-xs md:text-sm text-gray-500 text-medium"
+                        >{{ user.bio }}</a
+                      >
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-end">
+                    <FollowButton
+                      :followingId="user.id"
+                      :style="'text-sm font-medium bg-[#37823a] px-4 py-2 rounded-full text-white disabled:bg-[#37823a]/30 hover:bg-[#295d2a]'"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
