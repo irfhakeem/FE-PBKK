@@ -32,6 +32,7 @@ const handleRegister = async () => {
   };
 
   try {
+    console.log("User Data:", userData);
     const response = await registerUser(userData);
     console.log(response);
     successMessage.value = "Registration successful! Please log in.";
