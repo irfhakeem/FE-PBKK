@@ -63,8 +63,9 @@ watch(activeCategory, async () => {
 <template>
   <Navbar :user-username="user.username" :user-photo="user.avatar" />
   <div
-    class="grid grid-cols-1 lg:grid-cols-3 lg:max-w-6xl lg:mx-auto py-10 px-6 md:px-8"
+    class="grid grid-cols-1 lg:grid-cols-3 lg:max-w-6xl lg:mx-auto pt-10 px-6 md:px-8"
   >
+    <!-- Left Side -->
     <div className="lg:col-span-2 lg:max-w-[717px] ">
       <Slider
         :categories="['For You', 'Following']"
@@ -77,6 +78,8 @@ watch(activeCategory, async () => {
         </div>
       </div>
     </div>
+
+    <!-- Right Side -->
     <div class="hidden lg:flex lg:flex-col md:col-span-1 sticky top-0 h-screen">
       <div class="flex flex-col py-10 pr-auto pl-10 gap-10">
         <div class="flex flex-col gap-4">
