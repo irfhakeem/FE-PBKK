@@ -39,9 +39,7 @@ export const registerUser = async (userData) => {
         "Content-Type": "application/json",
       },
     });
-    // console.log(response.data);
     return response.data.data;
-
   } catch (error) {
     const errorMessage =
       error.response?.data.data.message || "Registration failed";
