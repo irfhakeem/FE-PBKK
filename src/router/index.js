@@ -78,6 +78,15 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/tag/:tagName/recommended/:type",
+      name: "recommendedPosts",
+      component: () => import("../views/Recommended.vue"),
+      props: (route) => ({
+        tagName: route.params.tagName,
+        type: route.params.type,
+      }),
+    },
+    {
       path: "/:catchAll(.*)",
       name: "not-found",
       component: () => import("../views/NotFound.vue"),
