@@ -111,7 +111,9 @@ const handleSubmitComment = async (postId) => {
     <div class="flex flex-col gap-10">
       <!-- Post content -->
       <div class="flex flex-col gap-10">
-        <p class="text-3xl md:text-5xl font-bold">{{ post.title }}</p>
+        <p class="text-2xl sm:text-3xl md:text-5xl font-bold">
+          {{ post.title }}
+        </p>
         <div class="flex gap-5 items-center">
           <img :src="author.avatar" alt="" class="w-9 h-9 rounded-full" />
           <div class="flex flex-col">
@@ -277,7 +279,9 @@ const handleSubmitComment = async (postId) => {
           alt=""
           className="w-20 h-20 rounded-full mb-4 object-cover"
         />
-        <div className="flex justify-between items-start mb-2 gap-7">
+        <div
+          className="flex sm:flex-row flex-col justify-between items-start mb-2 gap-7"
+        >
           <div className="flex flex-col">
             <a href="" className="font-semibold text-2xl">
               Written by {{ author.name }}
@@ -333,7 +337,7 @@ const handleSubmitComment = async (postId) => {
         <div>
           <a
             :href="'/profile/' + author.username"
-            className="border-[1px] rounded-full border-black text-black text-sm font-medium py-2 px-4 hover:bg-black hover:text-white"
+            className="border-[1px] rounded-full border-black text-black text-xs sm:text-sm font-medium py-2 px-4 hover:bg-black hover:text-white"
           >
             See more from {{ author.name }}
           </a>
