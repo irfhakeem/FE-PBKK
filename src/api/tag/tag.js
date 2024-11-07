@@ -37,3 +37,17 @@ export const tagContents = async (data) => {
     throw new Error("Failed to fetch recommended tags");
   }
 };
+
+export const recommendedDetail = async (data) => {
+  try {
+    const response = await apiClient.get("/recommended/detail", {
+      params: {
+        query: data.query,
+        type: data.type,
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw new Error("Failed to fetch recommended detail");
+  }
+};
