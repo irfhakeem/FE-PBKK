@@ -105,7 +105,7 @@ const setActiveCategory = async (category) => {
       </div>
 
       <div v-else>
-        <p>No user found</p>
+        <p class="text-gray-500">No user found</p>
       </div>
     </div>
 
@@ -116,7 +116,7 @@ const setActiveCategory = async (category) => {
       </div>
 
       <div v-else>
-        <p>No post found</p>
+        <p class="text-gray-500">No post found</p>
       </div>
     </div>
 
@@ -130,6 +130,10 @@ const setActiveCategory = async (category) => {
         >
           <ListCard :authorUsername="list.username" :list="list" />
         </div>
+
+        <div v-else>
+          <p class="text-gray-500">No list found</p>
+        </div>
       </div>
     </div>
 
@@ -142,6 +146,10 @@ const setActiveCategory = async (category) => {
             class="bg-[#f2f2f2] rounded-full px-6 py-3 text-base font-medium"
             >{{ tag.name }}</a
           >
+        </div>
+
+        <div v-else>
+          <p class="text-gray-500">No Tag found</p>
         </div>
       </div>
     </div>
