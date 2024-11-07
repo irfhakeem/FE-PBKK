@@ -83,7 +83,7 @@ const handleCopyLink = () => {
   </div>
 
   <div
-    class="grid grid-cols-1 lg:grid-cols-3 lg:max-w-6xl lg:mx-auto py-10 px-6 md:px-8"
+    class="grid grid-cols-1 lg:grid-cols-3 lg:max-w-6xl lg:mx-auto pt-10 px-6 md:px-8"
   >
     <div className="lg:col-span-2 lg:max-w-[717px] ">
       <img
@@ -136,7 +136,7 @@ const handleCopyLink = () => {
         </div>
       </div>
 
-      <div v-if="activeCategory == 'Lists'">
+      <div class="flex flex-col gap-5" v-if="activeCategory == 'Lists'">
         <div v-for="list in lists" :key="list.id">
           <ListCard :authorUsername="author.username" :list="list" />
         </div>
