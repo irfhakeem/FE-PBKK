@@ -111,9 +111,9 @@ const handleClickOutside = (event) => {
 
 <template>
   <div class="relative" ref="dropdownRef">
-    <button @click="toggleDropdown" class="p-2 hover:bg-gray-100 rounded-full">
-      <Bookmark v-if="!listed" />
-      <BookmarkCheck v-else />
+    <button @click="toggleDropdown">
+      <Bookmark v-if="!listed" class="h-5 w-5 hover:text-black text-gray-500" />
+      <BookmarkCheck v-else class="h-5 w-5 hover:text-black text-gray-500" />
     </button>
 
     <div
