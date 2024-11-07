@@ -106,7 +106,7 @@ const handleSubmitComment = async (postId) => {
 
   <div
     v-if="!loading"
-    class="grid grid-cols-1 mx-auto lg:max-w-3xl py-10 px-10 mb-10"
+    class="grid grid-cols-1 mx-auto lg:max-w-3xl pt-10 px-10 mb-10"
   >
     <div class="flex flex-col gap-10">
       <!-- Post content -->
