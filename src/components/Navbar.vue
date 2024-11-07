@@ -17,8 +17,11 @@ import {
   PenLine,
 } from "lucide-vue-next";
 import { logoutUser } from "@/api/auth/auth.js";
+import { useRouter } from "vue-router";
 
 const isSearchBarVisible = ref(false);
+const router = useRouter();
+const query = ref("");
 
 // Toggle function for mobile search bar
 const toggleSearchBar = () => {
@@ -33,6 +36,10 @@ const props = defineProps({
 const handleLogout = () => {
   logoutUser();
   window.location.href = "/login";
+};
+
+const submitSearch = () => {
+  router.push({ path: "/search", query: { q: query.value } });
 };
 </script>
 
@@ -62,13 +69,15 @@ const handleLogout = () => {
 
           <!-- search bar -->
           <div className="sm:flex hidden">
-            <button
+            <div
               className="py-2 px-3 rounded-l-full bg-gray-100 cursor-default"
-            ></button>
+            ></div>
             <input
               type="text"
               className="placeholder-gray-500 focus:outline-none rounded-r-full text-black bg-gray-100 py-2 pr-4"
               placeholder="Search.."
+              v-model="query"
+              @keyup.enter="submitSearch"
             />
           </div>
         </div>
@@ -144,6 +153,8 @@ const handleLogout = () => {
       type="text"
       class="placeholder-gray-500 focus:outline-none text-black bg-gray-100 py-2 px-4 w-full"
       placeholder="Search.."
+      v-model="query"
+      @keyup.enter="submitSearch"
     />
   </div>
 </template>
