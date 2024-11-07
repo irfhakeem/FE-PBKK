@@ -21,12 +21,12 @@ const updateCategory = (category) => {
 
 <template>
   <div class="sticky top-0 bg-white z-10">
-    <div class="relative mb-10 py-4 border-b-[2px] border-gray-100">
+    <div class="relative py-4 border-b-[2px] border-gray-100">
       <a
         v-for="category in categories"
         :key="category"
         :class="[
-          'mr-10 pb-4  text-xs sm:text-sm hover:text-black cursor-pointer',
+          'mr-10 pb-4 text-sm sm:text-base hover:text-black cursor-pointer',
           activeCategory === category
             ? 'border-b-2 border-black text-black'
             : 'text-gray-500',
