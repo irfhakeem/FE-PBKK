@@ -1,14 +1,30 @@
 <script setup>
 import Navbar from "@/components/Navbar.vue";
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import { me, getRandomUsers, getFollowing } from "@/api/user/user.js";
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose
+} from "@/components/ui/dialog";
+import { CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command'
+import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input'
+import { ComboboxAnchor, ComboboxContent, ComboboxInput, ComboboxPortal, ComboboxRoot } from 'radix-vue'
+import { createPost } from '@/api/post/post.js'
+import { uploadThumbnail} from '@/api/storage/storage.js'
 
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import Image from "@editorjs/image";
 import Code from "@editorjs/code";
 import Embed from "@editorjs/embed";
+import Input from "@/components/ui/input/Input.vue";
 
 // User, following, and peeps data
 const user = ref({
@@ -23,6 +39,12 @@ const user = ref({
 const following = ref([]);
 const peeps = ref([]);
 const showLabel = ref(false);
+
+const caption = ref("");    // Add this for caption
+const tags = ref(['Apple', 'Banana']) // Add this for tags input
+const thumbnail = ref("");  // Add this to hold the thumbnail URL or file
+const thumbnailPreview = ref(''); // Store the preview URL
+
 
 // Editor.js instance
 const editor = ref(null);
@@ -86,21 +108,79 @@ async function getUserData() {
   }
 }
 
-// Save title and Editor.js content
-async function saveContent() {
-  try {
-    const editorData = await editor.value.save();
-    const postData = {
-      title: title.value,
-      content: editorData,
-    };
-    console.log("Post data to save:", postData);
-    // Perform API call to save `postData` to the backend if needed
-  } catch (error) {
-    console.error("Error saving content:", error);
-    alert("There was an error saving your content.");
+function handleThumbnailChange(event) {
+  const file = event.target.files[0]; // Get the file the user selected
+  if (file) {
+    thumbnail.value = file; // Store the file for uploading
+
+    // Create a URL for the preview of the selected image
+    const previewUrl = URL.createObjectURL(file);
+    thumbnailPreview.value = previewUrl; // Set the preview URL
   }
 }
+
+
+// Save title and Editor.js contentimport { createPost } from './postapi';  // Import your API function for creating a post
+
+async function saveContent() {
+  try {
+    // Ensure editor is initialized
+    if (!editor.value) {
+      throw new Error("Editor is not initialized.");
+    }
+
+    // Attempt to save content from the editor
+    let editorData = "";
+    try {
+      editorData = await editor.value.save();
+    } catch (editorError) {
+      console.error("Error saving editor content:", editorError);
+      throw new Error("Failed to save content from the editor.");
+    }
+
+    // Validate fields
+    if (!title.value || !thumbnail.value || !tags.value || !caption.value) {
+      throw new Error("All fields (title, thumbnail, tags, caption) are required.");
+    }
+
+    // Step 1: Upload the thumbnail (only if there's a file to upload)
+    let thumbnailUrl = "";
+    if (thumbnail.value) {
+      console.log(thumbnail.value);
+      // Assuming thumbnail is a file object
+      const formData = new FormData();
+      formData.append("file", thumbnail.value); // `thumbnail.value` should be the file object
+      thumbnailUrl = await uploadThumbnail(formData); // Get the uploaded thumbnail URL
+    }
+
+    // Step 2: Prepare the post data
+    const postData = {
+      title: title.value,
+      thumbnail: thumbnailUrl || "",  // Use the thumbnail URL returned from the upload
+      tags: tags.value,
+      caption: caption.value,
+      content: editorData || "", // Default to empty string if editor content is empty
+    };
+
+    console.log("Post data to save:", postData);
+
+    // Step 3: Save the post using the API
+    const response = await createPost(postData); // Call createPost API function
+
+    if (!response) {
+      throw new Error("Failed to create post.");
+    }
+
+    console.log("Post created successfully!");
+    // Redirect to homepage or show success message here
+    window.location.href = "/";  // Redirect to homepage after successful creation
+  } catch (error) {
+    console.error("Error saving content:", error);
+    alert(`There was an error saving your content: ${error.message}`);
+  }
+}
+
+
 
 // Clean up Editor.js on component unmount
 onBeforeUnmount(() => {
@@ -108,6 +188,8 @@ onBeforeUnmount(() => {
     editor.value.destroy();
   }
 });
+
+
 </script>
 
 
@@ -149,10 +231,73 @@ onBeforeUnmount(() => {
         </div>
         
 
-       
+<!--        
         <Button @click="saveContent" class="mt-4 text-white px-4 py-2 rounded">
           Publish
-        </Button> 
+        </Button>  -->
+
+        <Dialog>
+          <DialogTrigger as-child>
+            <Button class="mt-4 text-white px-4 py-2 rounded">
+              Publish
+            </Button>
+          </DialogTrigger>
+          <DialogContent class="sm:max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>Publish to the World!</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to publish this content?
+              </DialogDescription>
+            </DialogHeader>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 my-4">
+              <!-- Column 1: Thumbnail Preview (Larger Space) -->
+              <div class="sm:col-span-1">
+                <label class="text-gray-600 font-semibold mb-2">Thumbnail</label>
+                <Input type="file" @change="handleThumbnailChange" accept="image/*" />
+
+                <!-- Thumbnail Preview -->
+                <div v-if="thumbnailPreview">
+                  <img :src="thumbnailPreview" alt="Thumbnail Preview" class="w-full h-64 object-contain rounded-lg" />
+                </div>
+              </div>
+
+              <!-- Column 2: Caption and Tags -->
+              <div class="sm:col-span-1">
+                <!-- Tags Input -->
+                <label class="text-gray-600 font-semibold my-2">Tags</label>
+                <TagsInput v-model="tags">
+                  <TagsInputItem v-for="item in tags" :key="item" :value="item">
+                    <TagsInputItemText />
+                    <TagsInputItemDelete />
+                  </TagsInputItem>
+                </TagsInput>
+
+                <!-- Caption Input -->
+                <label class="text-gray-600 font-semibold my-2">Caption</label>
+                <Textarea 
+                  v-model="caption"
+                  placeholder="Enter a caption for the post"
+                  class="border-gray-300 p-2 mb-4 w-full"
+                ></Textarea>
+              </div>
+            </div>
+
+            <DialogFooter class="sm:justify-end">
+              <!-- Close Button -->
+              <DialogClose as-child>
+                <Button variant="secondary" class="mt-4 px-4 py-2 rounded">
+                  Close
+                </Button>
+              </DialogClose>
+              <!-- Confirm Publish Button -->
+              <Button type="button" class="mt-4 text-white px-4 py-2 rounded" @click="saveContent">
+                Publish
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
       </div>
     </div>
   </div>
