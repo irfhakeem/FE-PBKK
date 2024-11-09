@@ -34,7 +34,11 @@ api.interceptors.response.use(
 
 export const registerUser = async (userData) => {
   try {
-    const response = await api.post("/auth/register", userData);
+    const response = await api.post("/auth/register", userData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     return response.data.data;
   } catch (error) {
     const errorMessage =

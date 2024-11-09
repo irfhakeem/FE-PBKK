@@ -8,19 +8,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, Settings, User, Library, Search } from "lucide-vue-next";
+import {
+  LogOut,
+  Settings,
+  User,
+  Library,
+  Search,
+  PenLine,
+} from "lucide-vue-next";
 import { logoutUser } from "@/api/auth/auth.js";
+import { useRouter } from "vue-router";
 
-
-const props = defineProps({
-  userUsername: String,
-  userPhoto: String,
-});
-
-// State for toggling the search bar on mobile
 const isSearchBarVisible = ref(false);
-// const isDropdownVisible = ref(false); // State for dropdown visibility
-const isMobile = ref(window.innerWidth < 768); 
+const router = useRouter();
+const query = ref("");
 
 // Toggle function for mobile search bar
 const toggleSearchBar = () => {
@@ -32,10 +33,9 @@ const handleLogout = () => {
   window.location.href = "/login";
 };
 
-// Watch for window resize to update isMobile
-window.addEventListener('resize', () => {
-  isMobile.value = window.innerWidth < 768; // Change 768 to your mobile breakpoint
-});
+const submitSearch = () => {
+  router.push({ path: "/search", query: { q: query.value } });
+};
 </script>
 
 <template>
@@ -64,13 +64,15 @@ window.addEventListener('resize', () => {
 
           <!-- search bar -->
           <div className="sm:flex hidden">
-            <button
+            <div
               className="py-2 px-3 rounded-l-full bg-gray-100 cursor-default"
-            ></button>
+            ></div>
             <input
               type="text"
               class="placeholder-gray-500 focus:outline-none rounded-r-full text-black bg-gray-100 py-2 pr-4"
               placeholder="Search.."
+              v-model="query"
+              @keyup.enter="submitSearch"
             />
           </div>
           </div>
@@ -94,6 +96,12 @@ window.addEventListener('resize', () => {
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem>
+                  <PenLine class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
+                  <a :href="'/write/'" class="sm:text-sm text-xs w-full"
+                    >Write</a
+                  >
+                </DropdownMenuItem>
+                <DropdownMenuItem>
                   <User class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
                   <a
                     :href="'/profile/' + props.userUsername"
@@ -103,8 +111,8 @@ window.addEventListener('resize', () => {
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Library class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
-                  <a href="/profile/bookmark" class="sm:text-sm text-xs w-full"
-                    >Bookmark</a
+                  <a :href="'/lists'" class="sm:text-sm text-xs w-full"
+                    >Lists</a
                   >
                 </DropdownMenuItem>
                 <DropdownMenuItem>
@@ -139,6 +147,8 @@ window.addEventListener('resize', () => {
       type="text"
       class="placeholder-gray-500 focus:outline-none text-black bg-gray-100 py-2 px-4 w-full"
       placeholder="Search.."
+      v-model="query"
+      @keyup.enter="submitSearch"
     />
   </div>
 </template>

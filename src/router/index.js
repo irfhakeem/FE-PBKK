@@ -22,7 +22,7 @@ const router = createRouter({
     },
     {
       path: "/settings",
-      name: "setting",
+      name: "settings",
       component: () => import("../views/Setting.vue"),
       // meta: { requiresAuth: true },    
     },
@@ -51,6 +51,53 @@ const router = createRouter({
         username: route.params.username,
         postId: route.params.postId,
       }),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/profile/:username/lists/:listId",
+      name: "detailLists",
+      component: () => import("../views/DetailList.vue"),
+      props: (route) => ({
+        username: route.params.username,
+        listId: route.params.listId,
+      }),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/write",
+      name: "write",
+      component: () => import("../views/WritePage.vue"),
+      props: (route) => ({ username: route.params.username }),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/lists",
+      name: "lists",
+      component: () => import("../views/Lists.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/tag/:tagName",
+      name: "tag",
+      component: () => import("../views/Tag.vue"),
+      props: (route) => ({ tagName: route.params.tagName }),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/tag/:tagName/recommended/:type",
+      name: "recommendedPosts",
+      component: () => import("../views/Recommended.vue"),
+      props: (route) => ({
+        tagName: route.params.tagName,
+        type: route.params.type,
+      }),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/search",
+      name: "search",
+      component: () => import("../views/Search.vue"),
+      props: (route) => ({ query: route.query.q }),
       meta: { requiresAuth: true },
     },
     {
