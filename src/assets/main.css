@@ -55,6 +55,30 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%
   }
+
+  #editorjs {
+    position: relative;
+  }
+  /* Remove margin from all elements */
+  #editorjs .codex-editor {
+    margin: 0 !important;
+  }
+
+  .ce-toolbar {
+    position: absolute !important;
+    left: -10px !important;
+    top: 0 !important;
+    transform: none !important;
+  }
+
+  #editorjs .codex-editor__redactor,
+  #editorjs .ce-toolbar__content, 
+  #editorjs .ce-block,
+  #editorjs .ce-block__content,
+  #editorjs .ce-paragraph.cdx-block {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 }
 @layer base {
   * {

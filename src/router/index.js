@@ -65,6 +65,13 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/write1",
+      name: "write1",
+      component: () => import("../views/WritePage1.vue"),
+      props: (route) => ({ username: route.params.username }),
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/lists",
       name: "lists",
       component: () => import("../views/Lists.vue"),

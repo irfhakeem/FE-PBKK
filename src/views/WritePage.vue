@@ -22,12 +22,18 @@ const user = ref({
 });
 const following = ref([]);
 const peeps = ref([]);
+const showLabel = ref(false);
 
 // Editor.js instance
 const editor = ref(null);
 
 // Title field for the blog post title
 const title = ref("");
+
+function checkTitleEmpty(event) {
+  // Hide label only if textarea is empty
+  showLabel.value = event.target.value.trim().length > 0;
+}
 
 // Initialize Editor.js
 onMounted(() => {
@@ -113,9 +119,9 @@ onBeforeUnmount(() => {
     <div class="grid grid-cols-[75px_auto] gap-4 items-start">
       <!-- Title Label Column -->
       <!-- Left Column: Title Label and Publish Button -->
-      <div class="flex flex-col items-end justify-between pt-2 h-full">
+      <div class="flex flex-col items-end justify-between pt-2 h-full" :class="{'invisible': !showLabel}">
         <!-- Title Label -->
-        <label class="text-gray-600 font-semibold mb-auto">Title</label>
+        <label class="text-gray-600 font-semibold my-4 mb-auto">Title</label>
         
         <!-- Publish Button aligned to last text block
         <Button @click="saveContent" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
@@ -129,8 +135,10 @@ onBeforeUnmount(() => {
         <input
           v-model="title"
           type="text"
+          @focus="showLabel = true"
+          @blur="checkTitleEmpty"
           placeholder="Tell you story..."
-          class="rounded px-4 py-2 text-lg font-semibold w-full"
+          class="text-3xl font-bold text-gray-800 bg-transparent border-gray-300 focus:outline-none my-4"
         />
         <!-- Editor.js Container -->
 
@@ -141,21 +149,13 @@ onBeforeUnmount(() => {
         </div>
         
 
-        <!-- Save Button
+       
         <Button @click="saveContent" class="mt-4 text-white px-4 py-2 rounded">
           Publish
-        </Button> -->
+        </Button> 
       </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-/* Adjust the padding and max-width of Editor.js blocks */
-.ce-block__content,
-.ce-toolbar__content {
-  max-width: unset;
-}
 
-
-</style>
