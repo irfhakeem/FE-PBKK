@@ -41,17 +41,31 @@ export const uploadAvatar = async (file) => {
   }
 };
 
-export const uploadBanner = async (data) => {
+export const uploadBanner = async (file) => {
+  const formData = new FormData();
+  formData.append("avatar", file);
+
   try {
-    const response = await apiClient.post("/banner", data);
+    const response = await apiClient.post("/banner", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data.file;
   } catch (error) {
     throw new Error("Failed to upload banner");
   }
 };
-export const uploadThumbnail = async (data) => {
+export const uploadThumbnail = async (file) => {
   try {
-    const response = await apiClient.post("/thumbnail", data);
+    const formData = new FormData();
+    formData.append("avatar", file);
+
+    const response = await apiClient.post("/thumbnail", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data.file;
   } catch (error) {
     throw new Error("Failed to upload thumbnail");
