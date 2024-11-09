@@ -62,6 +62,8 @@ onMounted(async () => {
 
   comments.value = await getComments({ postId: post.value.id });
   loading.value = false;
+
+  console.log(post.value);
 });
 
 const handleClickOutside = (event) => {
@@ -263,7 +265,43 @@ const handleSubmitComment = async (postId) => {
           </div>
         </div>
       </div>
-      <p>{{ post.content }}</p>
+
+      <!-- Post Content -->
+      <div>
+        <div
+          v-for="block in post.content.blocks"
+          :key="block.id"
+          class="editor-block"
+        >
+          <!-- Paragraph Block -->
+          <div v-if="block.type === 'paragraph'" class="paragraph">
+            <p>{{ block.data.text }}</p>
+          </div>
+
+          <!-- Header Block -->
+          <div v-if="block.type === 'header'" class="header">
+            <h2>{{ block.data.text }}</h2>
+          </div>
+
+          <!-- List Block -->
+          <div v-if="block.type === 'list'" class="list">
+            <ul>
+              <li v-for="item in block.data.items" :key="item">{{ item }}</li>
+            </ul>
+          </div>
+
+          <!-- Code Block -->
+          <div v-if="block.type === 'code'" class="code-block">
+            <pre><code>{{ block.data.code }}</code></pre>
+          </div>
+
+          <!-- Image Block -->
+          <div v-if="block.type === 'image'" class="image">
+            <img :src="block.data.file.url" :alt="block.data.caption" />
+          </div>
+        </div>
+      </div>
+
       <div class="flex flex-wrap gap-3">
         <!-- Tags of post -->
       </div>
@@ -370,5 +408,35 @@ const handleSubmitComment = async (postId) => {
 .overflow-y-auto {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+.editor-block {
+  margin-bottom: 20px;
+}
+
+.paragraph p {
+  font-size: 1.2em;
+}
+
+.header h2 {
+  font-size: 2em;
+}
+
+.list ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+.code-block pre {
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+.code-block code {
+  font-family: monospace;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 </style>
