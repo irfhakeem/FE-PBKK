@@ -12,13 +12,19 @@ const router = createRouter({
       path: "/home",
       name: "home",
       component: () => import("../views/HomeView.vue"),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },
+    },
+    {
+      path: "/setting",
+      name: "setting",
+      component: () => import("../views/Setting.vue"),
+      // meta: { requiresAuth: true },
     },
     {
       path: "/settings",
       name: "settings",
       component: () => import("../views/Setting.vue"),
-      meta: { requiresAuth: true },
+      // meta: { requiresAuth: true },    
     },
     {
       path: "/register",
@@ -92,6 +98,14 @@ const router = createRouter({
         tagName: route.params.tagName,
         type: route.params.type,
       }),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/search",
+      name: "search",
+      component: () => import("../views/Search.vue"),
+      props: (route) => ({ query: route.query.q }),
+      meta: { requiresAuth: true },
     },
     {
       path: "/:catchAll(.*)",

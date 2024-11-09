@@ -231,7 +231,7 @@ const RemoveAvatar = async () => {
                       :src="user.avatar"
                       alt=""
                       class="w-16 h-16 sm:w-20 sm:h-[76px] rounded-full object-cover bg-center bg-cover"
-                      style="flex: 20%"
+                      style="flex: 20%"jam 
                     />
                     <div class="flex flex-col gap-4" style="flex: 80%">
                       <div class="flex gap-4">
