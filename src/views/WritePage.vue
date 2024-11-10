@@ -2,8 +2,8 @@
 import Navbar from "@/components/Navbar.vue";
 import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import { me, getRandomUsers, getFollowing } from "@/api/user/user.js";
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -11,20 +11,22 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose
+  DialogClose,
 } from "@/components/ui/dialog";
-import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
+import {
+  TagsInput,
+  TagsInputItem,
+  TagsInputItemDelete,
+  TagsInputItemText,
+} from "@/components/ui/tags-input";
 
-
-import { getAllTags } from '@/api/tag/tag.js';  // Importing the fetchTags API function
-import { createPost } from '@/api/post/post.js';
-import { uploadThumbnail } from '@/api/storage/storage.js';
+import { getAllTags } from "@/api/tag/tag.js"; // Importing the fetchTags API function
+import { createPost } from "@/api/post/post.js";
+import { uploadThumbnail } from "@/api/storage/storage.js";
 
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
-import Image from "@editorjs/image";
 import Code from "@editorjs/code";
-import Embed from "@editorjs/embed";
 import Input from "@/components/ui/input/Input.vue";
 
 // User, following, and peeps data
@@ -41,14 +43,13 @@ const following = ref([]);
 const peeps = ref([]);
 const showLabel = ref(false);
 
-const caption = ref("");    // Add this for caption
+const caption = ref(""); // Add this for caption
 
-const tags = ref([]);  // Will hold the fetched tags
-const selectedTags = ref([]);  // This will hold the tags selected by the user
+const tags = ref([]); // Will hold the fetched tags
+const selectedTags = ref([]); // This will hold the tags selected by the user
 
-
-const thumbnail = ref("");  // Add this to hold the thumbnail URL or file
-const thumbnailPreview = ref(''); // Store the preview URL
+const thumbnail = ref(""); // Add this to hold the thumbnail URL or file
+const thumbnailPreview = ref(""); // Store the preview URL
 
 // Editor.js instance
 const editor = ref(null);
@@ -66,35 +67,19 @@ onMounted(() => {
   getData();
 
   editor.value = new EditorJS({
-    holder: 'editorjs',
+    holder: "editorjs",
     placeholder: "Tell your story...",
     tools: {
       header: {
         class: Header,
         config: {
-          placeholder: 'Add a heading here',
-          levels: [1, 2],
-          defaultLevel: 1
-        },
-      },
-      image: {
-        class: Image,
-        config: {
-          endpoints: {
-            byFile: "your_image_upload_url", // replace with your upload URL
-          },
+          placeholder: "Add a heading here",
+          levels: [1],
+          defaultLevel: 1,
+          inlineToolbar: ["bold"],
         },
       },
       code: Code,
-      embed: {
-        class: Embed,
-        config: {
-          services: {
-            youtube: true,
-            vimeo: true,
-          },
-        },
-      },
     },
     data: {},
   });
@@ -106,7 +91,7 @@ async function getData() {
     following.value = await getFollowing();
     user.value = await me();
     peeps.value = await getRandomUsers();
-    tags.value = await getAllTags ();
+    tags.value = await getAllTags();
     console.log("Tags data:", tags.value);
   } catch (error) {
     console.error("Error fetching user data:", error);
@@ -144,8 +129,15 @@ async function saveContent() {
     }
 
     // Validate fields
-    if (!title.value || !thumbnail.value || !tags.value.length || !caption.value) {
-      throw new Error("All fields (title, thumbnail, tags, caption) are required.");
+    if (
+      !title.value ||
+      !thumbnail.value ||
+      !tags.value.length ||
+      !caption.value
+    ) {
+      throw new Error(
+        "All fields (title, thumbnail, tags, caption) are required."
+      );
     }
 
     // Step 1: Upload the thumbnail (only if there's a file to upload)
@@ -157,15 +149,15 @@ async function saveContent() {
     // console.log(title.value);
     // console.log(editorData);
     // console.log(imageUrl);
-    console.log(tags.value.map(tag => tag.id));
+    console.log(tags.value.map((tag) => tag.id));
     // console.log(caption.value);
     // Step 2: Prepare the post data
     const postData = {
       title: title.value,
       content: editorData || "", // Default to empty string if editor content is empty
       caption: caption.value,
-      image: thumbnailUrl || "",  // Use the thumbnail URL returned from the upload
-      tags: tags.value.map(tag => tag.id), // Get the selected tag ids
+      thumbnail: thumbnailUrl || "", // Use the thumbnail URL returned from the upload
+      tags: tags.value.map((tag) => tag.id), // Get the selected tag ids
     };
 
     console.log("Post data to save:", postData);
@@ -179,11 +171,10 @@ async function saveContent() {
 
     console.log("Post created successfully!");
     // Redirect to homepage or show success message here
-    window.location.href = "/";  // Redirect to homepage after successful creation
+    window.location.href = "/home"; // Redirect to homepage after successful creation
   } catch (error) {
     console.error("Error saving content:", error);
     alert(`There was an error saving your content: ${error.message}`);
-   
   }
 }
 
@@ -196,7 +187,12 @@ onBeforeUnmount(() => {
 
 function removeTag(tagToRemove) {
   // Use the `filter` method to remove the selected tag by id
-  tags.value = tags.value.filter(tag => tag.id !== tagToRemove.id);
+  tags.value = tags.value.filter((tag) => tag.id !== tagToRemove.id);
+}
+
+function autoResize(event) {
+  event.target.style.height = "auto"; // Reset height to auto
+  event.target.style.height = `${event.target.scrollHeight}px`; // Set height based on scroll height
 }
 </script>
 
@@ -204,48 +200,36 @@ function removeTag(tagToRemove) {
   <Navbar :user-username="user.username" :user-photo="user.avatar" />
 
   <!-- Main layout with Editor.js -->
-  <div class="container lg:max-w-6xl lg:mx-auto py-10 px-6 md:px-8">
-    <div class="grid grid-cols-[75px_auto] gap-4 items-start">
-      <!-- Title Label Column -->
-      <!-- Left Column: Title Label and Publish Button -->
-      <div class="flex flex-col items-end justify-between pt-2 h-full" :class="{'invisible': !showLabel}">
-        <!-- Title Label -->
-        <label class="text-gray-600 font-semibold my-4 mb-auto">Title</label>
-        
-        <!-- Publish Button aligned to last text block
-        <Button @click="saveContent" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
-          Publish
-        </Button> -->
+  <div class="sm:max-w-6xl sm:mx-auto py-6 px-6 md:px-8">
+    <div class="flex flex-col gap-4 items-start w-full">
+      <!-- Title Input -->
+      <div
+        :class="{ invisible: !showLabel }"
+        class="flex items-center justify-start"
+      >
+        <label class="text-gray-600 font-semibold mb-auto">Title</label>
       </div>
 
-      <!-- Editor.js Column -->
-      <div class="flex flex-col w-full">
-
-        <input
+      <div class="flex flex-col lg:flex-row items-center w-full">
+        <textarea
           v-model="title"
-          type="text"
           @focus="showLabel = true"
           @blur="checkTitleEmpty"
-          placeholder="Tell you story..."
-          class="text-3xl font-bold text-gray-800 bg-transparent border-gray-300 focus:outline-none my-4"
-        />
-        <!-- Editor.js Container -->
+          placeholder="Tell your story..."
+          maxlength="75"
+          class="text-xl sm:text-3xl font-bold text-gray-800 bg-transparent focus:outline-none w-full resize-none overflow-hidden"
+          rows="1"
+          @input="autoResize"
+        ></textarea>
+      </div>
 
-        <div>
-          <div 
-          id="editorjs" 
-        ></div>
-        </div>
-        
+      <!-- Editor.js container -->
+      <div id="editorjs" class="w-full"></div>
 
-<!--        
-        <Button @click="saveContent" class="mt-4 text-white px-4 py-2 rounded">
-          Publish
-        </Button>  -->
-
-        <Dialog>
+      <div class="flex justify-end items-center w-full">
+        <Dialog class="">
           <DialogTrigger as-child>
-            <Button class="mt-4 text-white px-4 py-2 rounded">
+            <Button class="text-white px-4 py-2 rounded cursor-pointer">
               Publish
             </Button>
           </DialogTrigger>
@@ -257,59 +241,101 @@ function removeTag(tagToRemove) {
               </DialogDescription>
             </DialogHeader>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 my-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-6 gap-2 my-4">
               <!-- Column 1: Thumbnail Preview (Larger Space) -->
               <div class="sm:col-span-1">
-                <label class="text-gray-600 font-semibold mb-2">Thumbnail</label>
-                <Input type="file" @change="handleThumbnailChange" accept="image/*" />
+                <div class="flex flex-col gap-2">
+                  <label class="text-gray-600 font-semibold">Thumbnail</label>
+                  <Input
+                    type="file"
+                    @change="handleThumbnailChange"
+                    accept="image/*"
+                  />
 
-                <!-- Thumbnail Preview -->
-                <div v-if="thumbnailPreview">
-                  <img :src="thumbnailPreview" alt="Thumbnail Preview" class="w-full h-64 object-contain rounded-lg" />
+                  <!-- Thumbnail Preview -->
+                  <div v-if="thumbnailPreview">
+                    <img
+                      :src="thumbnailPreview"
+                      alt="Thumbnail Preview"
+                      class="w-full h-64 object-contain rounded-lg"
+                    />
+                  </div>
                 </div>
               </div>
 
               <!-- Column 2: Caption and Tags -->
               <div class="sm:col-span-1">
-                <!-- Tags Input -->
-                <label class="text-gray-600 font-semibold my-2">Tags</label>
-                 <!-- Tags Input -->
-                 <TagsInput v-model="tags">
-                  <TagsInputItem v-for="tag in tags" :key="tag.id" :value="tag.name">
-                    <TagsInputItemText>{{ tag }}</TagsInputItemText>
-                    <TagsInputItemDelete @click="removeTag(tag)" />
-                  </TagsInputItem>
-                </TagsInput>
+                <div class="flex flex-col gap-2">
+                  <!-- Tags Input -->
+                  <label class="text-gray-600 font-semibold">Tags</label>
+                  <!-- Tags Input -->
+                  <TagsInput v-model="tags">
+                    <TagsInputItem
+                      v-for="tag in tags"
+                      :key="tag.id"
+                      :value="tag.name"
+                    >
+                      <TagsInputItemText>{{ tag }}</TagsInputItemText>
+                      <TagsInputItemDelete @click="removeTag(tag)" />
+                    </TagsInputItem>
+                  </TagsInput>
 
-
-                <!-- Caption Input -->
-                <label class="text-gray-600 font-semibold my-2">Caption</label>
-                <Textarea 
-                  v-model="caption"
-                  placeholder="Enter a caption for the post"
-                  class="border-gray-300 p-2 mb-4 w-full"
-                ></Textarea>
+                  <!-- Caption Input -->
+                  <label class="text-gray-600 font-semibold">Caption</label>
+                  <Textarea
+                    v-model="caption"
+                    placeholder="Enter a caption for the post"
+                    class="border-gray-300 p-2 mb-4 w-full resize-none"
+                    maxlength="150"
+                  ></Textarea>
+                </div>
               </div>
             </div>
 
-            <DialogFooter class="sm:justify-end">
+            <DialogFooter class="flex flex-row gap-2 justify-end">
               <!-- Close Button -->
               <DialogClose as-child>
-                <Button variant="secondary" class="mt-4 px-4 py-2 rounded">
+                <Button
+                  variant="secondary"
+                  class="cursor-pointer px-4 py-2 rounded"
+                >
                   Close
                 </Button>
               </DialogClose>
               <!-- Confirm Publish Button -->
-              <Button type="button" class="mt-4 text-white px-4 py-2 rounded" @click="saveContent">
+              <Button
+                type="button"
+                class="cursor-pointer text-white px-4 py-2 rounded"
+                @click="saveContent"
+              >
                 Publish
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
-
       </div>
     </div>
   </div>
 </template>
 
+<style>
+/* Atur ukuran dan ketebalan header */
+#editorjs h1 {
+  font-size: 1.125rem; /* Ukuran lebih besar untuk header */
+  font-weight: bold; /* Membuat teks tebal */
+}
 
+/* Paragraf lebih kecil untuk membedakan */
+#editorjs p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+#editorjs .codex-editor__redactor {
+  padding: 0 !important;
+}
+
+#editorjs .ce-block__content {
+  width: 100% !important;
+}
+</style>
