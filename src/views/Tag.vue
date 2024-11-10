@@ -137,7 +137,10 @@ onMounted(async () => {
                       >
                     </div>
                   </div>
-                  <div class="flex items-center justify-end">
+                  <div
+                    v-if="user.id != Me.id"
+                    class="flex items-center justify-end"
+                  >
                     <FollowButton
                       :followingId="user.id"
                       :style="'text-sm font-medium bg-[#37823a] px-4 py-2 rounded-full text-white disabled:bg-[#37823a]/30 hover:bg-[#295d2a]'"
