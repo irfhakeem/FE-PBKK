@@ -101,6 +101,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: "/posts",
+      name: "posts",
+      component: () => import("../views/Posts.vue"),
+      meta: { requiresAuth: true },
+    },
+    {
       path: "/:catchAll(.*)",
       name: "not-found",
       component: () => import("../views/NotFound.vue"),
