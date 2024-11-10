@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/dialog";
 import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
 
-import { fetchTags } from '@/api/tag/tag.js';  // Importing the fetchTags API function
+
+import { getAllTags } from '@/api/tag/tag.js';  // Importing the fetchTags API function
 import { createPost } from '@/api/post/post.js';
 import { uploadThumbnail } from '@/api/storage/storage.js';
 
@@ -43,10 +44,10 @@ const showLabel = ref(false);
 const caption = ref("");    // Add this for caption
 
 const tags = ref([]);  // Will hold the fetched tags
-
 const selectedTags = ref([]);  // This will hold the tags selected by the user
 
-const image = ref("");  // Add this to hold the thumbnail URL or file
+
+const thumbnail = ref("");  // Add this to hold the thumbnail URL or file
 const thumbnailPreview = ref(''); // Store the preview URL
 
 // Editor.js instance
@@ -62,6 +63,8 @@ function checkTitleEmpty(event) {
 
 // Initialize Editor.js
 onMounted(() => {
+  getData();
+
   editor.value = new EditorJS({
     holder: 'editorjs',
     placeholder: "Tell your story...",
@@ -95,9 +98,6 @@ onMounted(() => {
     },
     data: {},
   });
-
-  // Fetch user, following, peeps data and tags data
-  getData();
 });
 
 // Fetch user, following, and peeps data
@@ -106,7 +106,8 @@ async function getData() {
     following.value = await getFollowing();
     user.value = await me();
     peeps.value = await getRandomUsers();
-    tags.value = await fetchTags();
+    tags.value = await getAllTags ();
+    console.log("Tags data:", tags.value);
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
@@ -117,7 +118,7 @@ async function getData() {
 function handleThumbnailChange(event) {
   const file = event.target.files[0]; // Get the file the user selected
   if (file) {
-    image.value = file; // Store the file for uploading
+    thumbnail.value = file; // Store the file for uploading
 
     // Create a URL for the preview of the selected image
     const previewUrl = URL.createObjectURL(file);
@@ -143,24 +144,28 @@ async function saveContent() {
     }
 
     // Validate fields
-    if (!title.value || !image.value || !selectedTags.value.length || !caption.value) {
+    if (!title.value || !thumbnail.value || !tags.value.length || !caption.value) {
       throw new Error("All fields (title, thumbnail, tags, caption) are required.");
     }
 
     // Step 1: Upload the thumbnail (only if there's a file to upload)
-    let imageUrl = "";
-    if (image.value) {
-      console.log(image.value);
-      imageUrl = await uploadThumbnail(image.value); // Get the uploaded thumbnail URL
+    let thumbnailUrl = "";
+    if (thumbnail.value) {
+      console.log(thumbnail.value);
+      thumbnailUrl = await uploadThumbnail(thumbnail.value); // Get the uploaded thumbnail URL
     }
-
+    // console.log(title.value);
+    // console.log(editorData);
+    // console.log(imageUrl);
+    console.log(tags.value.map(tag => tag.id));
+    // console.log(caption.value);
     // Step 2: Prepare the post data
     const postData = {
       title: title.value,
-      image: imageUrl || "",  // Use the thumbnail URL returned from the upload
-      tags: selectedTags.value.map(tag => tag.id), // Get the selected tag ids
-      caption: caption.value,
       content: editorData || "", // Default to empty string if editor content is empty
+      caption: caption.value,
+      image: thumbnailUrl || "",  // Use the thumbnail URL returned from the upload
+      tags: tags.value.map(tag => tag.id), // Get the selected tag ids
     };
 
     console.log("Post data to save:", postData);
@@ -178,6 +183,7 @@ async function saveContent() {
   } catch (error) {
     console.error("Error saving content:", error);
     alert(`There was an error saving your content: ${error.message}`);
+   
   }
 }
 
@@ -188,10 +194,10 @@ onBeforeUnmount(() => {
   }
 });
 
-function removeTag(id) {
-  selectedTags.value = selectedTags.value.filter(tag => tag.id !== id);
+function removeTag(tagToRemove) {
+  // Use the `filter` method to remove the selected tag by id
+  tags.value = tags.value.filter(tag => tag.id !== tagToRemove.id);
 }
-
 </script>
 
 <template>
@@ -267,12 +273,14 @@ function removeTag(id) {
               <div class="sm:col-span-1">
                 <!-- Tags Input -->
                 <label class="text-gray-600 font-semibold my-2">Tags</label>
-                <TagsInput v-model="tags">
-                  <TagsInputItem v-for="item in tags" :key="item.id" :value="item.label">
-                    <TagsInputItemText>{{ item.label }}</TagsInputItemText>
-                    <TagsInputItemDelete @click="removeTag(item.id)" />
+                 <!-- Tags Input -->
+                 <TagsInput v-model="tags">
+                  <TagsInputItem v-for="tag in tags" :key="tag.id" :value="tag.name">
+                    <TagsInputItemText>{{ tag }}</TagsInputItemText>
+                    <TagsInputItemDelete @click="removeTag(tag)" />
                   </TagsInputItem>
                 </TagsInput>
+
 
                 <!-- Caption Input -->
                 <label class="text-gray-600 font-semibold my-2">Caption</label>
