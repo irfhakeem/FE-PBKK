@@ -43,7 +43,7 @@ export const uploadAvatar = async (file) => {
 
 export const uploadBanner = async (file) => {
   const formData = new FormData();
-  formData.append("avatar", file);
+  formData.append("banner", file);
 
   try {
     const response = await apiClient.post("/banner", formData, {
@@ -59,7 +59,7 @@ export const uploadBanner = async (file) => {
 export const uploadThumbnail = async (file) => {
   try {
     const formData = new FormData();
-    formData.append("avatar", file);
+    formData.append("thumbnail", file);
 
     const response = await apiClient.post("/thumbnail", formData, {
       headers: {
