@@ -24,7 +24,7 @@ const router = createRouter({
       path: "/settings",
       name: "settings",
       component: () => import("../views/Setting.vue"),
-      // meta: { requiresAuth: true },    
+      // meta: { requiresAuth: true },
     },
     {
       path: "/register",
@@ -67,13 +67,6 @@ const router = createRouter({
       path: "/write",
       name: "write",
       component: () => import("../views/WritePage.vue"),
-      props: (route) => ({ username: route.params.username }),
-      meta: { requiresAuth: true },
-    },
-    {
-      path: "/write1",
-      name: "write1",
-      component: () => import("../views/WritePage1.vue"),
       props: (route) => ({ username: route.params.username }),
       meta: { requiresAuth: true },
     },
