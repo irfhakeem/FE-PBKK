@@ -3,7 +3,7 @@ import Navbar from "@/components/Navbar.vue";
 import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import { me, getRandomUsers, getFollowing } from "@/api/user/user.js";
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea'
+import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
   DialogContent,
@@ -13,11 +13,11 @@ import {
   DialogTrigger,
   DialogClose
 } from "@/components/ui/dialog";
-import { CommandEmpty, CommandGroup, CommandItem, CommandList } from '@/components/ui/command'
-import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input'
-import { ComboboxAnchor, ComboboxContent, ComboboxInput, ComboboxPortal, ComboboxRoot } from 'radix-vue'
-import { createPost } from '@/api/post/post.js'
-import { uploadThumbnail} from '@/api/storage/storage.js'
+import { TagsInput, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText } from '@/components/ui/tags-input';
+
+import { fetchTags } from '@/api/tag/tag.js';  // Importing the fetchTags API function
+import { createPost } from '@/api/post/post.js';
+import { uploadThumbnail } from '@/api/storage/storage.js';
 
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
@@ -41,10 +41,13 @@ const peeps = ref([]);
 const showLabel = ref(false);
 
 const caption = ref("");    // Add this for caption
-const tags = ref(['Apple', 'Banana']) // Add this for tags input
-const thumbnail = ref("");  // Add this to hold the thumbnail URL or file
-const thumbnailPreview = ref(''); // Store the preview URL
 
+const tags = ref([]);  // Will hold the fetched tags
+
+const selectedTags = ref([]);  // This will hold the tags selected by the user
+
+const image = ref("");  // Add this to hold the thumbnail URL or file
+const thumbnailPreview = ref(''); // Store the preview URL
 
 // Editor.js instance
 const editor = ref(null);
@@ -93,25 +96,28 @@ onMounted(() => {
     data: {},
   });
 
-  // Fetch user, following, and peeps data
-  getUserData();
+  // Fetch user, following, peeps data and tags data
+  getData();
 });
 
 // Fetch user, following, and peeps data
-async function getUserData() {
+async function getData() {
   try {
     following.value = await getFollowing();
     user.value = await me();
     peeps.value = await getRandomUsers();
+    tags.value = await fetchTags();
   } catch (error) {
     console.error("Error fetching user data:", error);
   }
 }
 
+// Fetch tags data from the API
+
 function handleThumbnailChange(event) {
   const file = event.target.files[0]; // Get the file the user selected
   if (file) {
-    thumbnail.value = file; // Store the file for uploading
+    image.value = file; // Store the file for uploading
 
     // Create a URL for the preview of the selected image
     const previewUrl = URL.createObjectURL(file);
@@ -119,9 +125,7 @@ function handleThumbnailChange(event) {
   }
 }
 
-
-// Save title and Editor.js contentimport { createPost } from './postapi';  // Import your API function for creating a post
-
+// Save title and Editor.js content
 async function saveContent() {
   try {
     // Ensure editor is initialized
@@ -139,25 +143,22 @@ async function saveContent() {
     }
 
     // Validate fields
-    if (!title.value || !thumbnail.value || !tags.value || !caption.value) {
+    if (!title.value || !image.value || !selectedTags.value.length || !caption.value) {
       throw new Error("All fields (title, thumbnail, tags, caption) are required.");
     }
 
     // Step 1: Upload the thumbnail (only if there's a file to upload)
-    let thumbnailUrl = "";
-    if (thumbnail.value) {
-      console.log(thumbnail.value);
-      // Assuming thumbnail is a file object
-      const formData = new FormData();
-      formData.append("file", thumbnail.value); // `thumbnail.value` should be the file object
-      thumbnailUrl = await uploadThumbnail(formData); // Get the uploaded thumbnail URL
+    let imageUrl = "";
+    if (image.value) {
+      console.log(image.value);
+      imageUrl = await uploadThumbnail(image.value); // Get the uploaded thumbnail URL
     }
 
     // Step 2: Prepare the post data
     const postData = {
       title: title.value,
-      thumbnail: thumbnailUrl || "",  // Use the thumbnail URL returned from the upload
-      tags: tags.value,
+      image: imageUrl || "",  // Use the thumbnail URL returned from the upload
+      tags: selectedTags.value.map(tag => tag.id), // Get the selected tag ids
       caption: caption.value,
       content: editorData || "", // Default to empty string if editor content is empty
     };
@@ -180,8 +181,6 @@ async function saveContent() {
   }
 }
 
-
-
 // Clean up Editor.js on component unmount
 onBeforeUnmount(() => {
   if (editor.value) {
@@ -189,9 +188,11 @@ onBeforeUnmount(() => {
   }
 });
 
+function removeTag(id) {
+  selectedTags.value = selectedTags.value.filter(tag => tag.id !== id);
+}
 
 </script>
-
 
 <template>
   <Navbar :user-username="user.username" :user-photo="user.avatar" />
@@ -267,9 +268,9 @@ onBeforeUnmount(() => {
                 <!-- Tags Input -->
                 <label class="text-gray-600 font-semibold my-2">Tags</label>
                 <TagsInput v-model="tags">
-                  <TagsInputItem v-for="item in tags" :key="item" :value="item">
-                    <TagsInputItemText />
-                    <TagsInputItemDelete />
+                  <TagsInputItem v-for="item in tags" :key="item.id" :value="item.label">
+                    <TagsInputItemText>{{ item.label }}</TagsInputItemText>
+                    <TagsInputItemDelete @click="removeTag(item.id)" />
                   </TagsInputItem>
                 </TagsInput>
 
