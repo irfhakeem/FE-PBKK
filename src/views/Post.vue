@@ -302,8 +302,14 @@ const handleSubmitComment = async (postId) => {
         </div>
       </div>
 
-      <div class="flex flex-wrap gap-3">
-        <!-- Tags of post -->
+      <div class="flex flex-wrap gap-x-2 gap-y-4">
+        <div v-for="tag in post.tags" :key="tag.id">
+          <a
+            :href="'/tag/' + tag.name"
+            class="bg-[#f2f2f2] rounded-full px-4 py-2 text-xs font-medium"
+            >{{ tag.name }}</a
+          >
+        </div>
       </div>
     </div>
   </div>
