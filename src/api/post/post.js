@@ -103,3 +103,20 @@ export const getComments = async (data) => {
     throw new Error("Failed get comments");
   }
 };
+
+export const getUserPosts = async () => {
+  try {
+    const response = await apiClient.get("/user-posts");
+    return response.data.data;
+  } catch (error) {
+    throw new Error("Failed to fetch user posts");
+  }
+};
+
+export const deletePost = async (postId) => {
+  try {
+    await apiClient.delete(`/delete/${postId}`);
+  } catch (error) {
+    throw new Error("Failed to delete post");
+  }
+};
