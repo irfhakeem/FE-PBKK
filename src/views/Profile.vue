@@ -10,16 +10,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { me, userByUsername } from "@/api/user/user.js";
+import { me, userByUsername, updateUser } from "@/api/user/user.js";
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { Bell, Ellipsis, Link } from "lucide-vue-next";
+import { Bell, Ellipsis, Link, Image, Check, X } from "lucide-vue-next";
 import { getPosts } from "@/api/post/post.js";
 import FollowButton from "../components/FollowButton.vue";
 import ListCard from "@/components/ListCard.vue";
 import { userLists } from "@/api/user/list.js";
+import { useRouter } from "vue-router";
+import { uploadBanner } from "@/api/storage/storage.js";
 
 const route = useRoute();
+const router = useRouter();
 const profileUsername = route.params.username;
 const posts = ref([]);
 var round = ref(1);
@@ -47,6 +50,7 @@ const author = ref({
 
 const isMyProfile = ref(false);
 const activeCategory = ref("Home");
+var bannerData = ref(null);
 
 const setActiveCategory = (category) => {
   activeCategory.value = category;
@@ -72,6 +76,30 @@ onMounted(async () => {
 const handleCopyLink = () => {
   navigator.clipboard.writeText(window.location.href);
 };
+
+const UpdateBanner = async () => {
+  await updateUser({ banner: bannerData });
+  bannerData = null;
+  router.go(0);
+};
+
+const UploadBanner = async () => {
+  const bannerFile = document.getElementById("bannerFile").files[0];
+  if (!bannerFile) {
+    console.error("No file selected");
+    return;
+  }
+  try {
+    bannerData = await uploadBanner(bannerFile);
+    author.value.banner = bannerData;
+  } catch (error) {
+    console.error("Failed to upload banner:", error.message);
+  }
+};
+
+const CancelUpdate = () => {
+  router.go(0);
+};
 </script>
 
 <template>
@@ -85,17 +113,52 @@ const handleCopyLink = () => {
   <div
     class="grid grid-cols-1 lg:grid-cols-3 lg:max-w-6xl lg:mx-auto pt-10 px-6 md:px-8"
   >
-    <div className="lg:col-span-2 lg:max-w-[717px] ">
+    <div class="lg:col-span-2 lg:max-w-[717px] relative">
+      <!-- Banner image -->
       <img
         :src="author.banner"
         alt=""
         class="w-full min-h-[150px] max-h-[150px] bg-center object-cover"
       />
-      <div className="lg:mt-10 md:mt-6 lg:px-6 sm:px-8 px-4">
-        <div
-          className="flex lg:flex-row flex-col py-5 lg:items-center justify-between items-start"
+
+      <div class="absolute top-2 right-2">
+        <label
+          v-if="isMyProfile && bannerData === null"
+          class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm font-medium text-black/50 bg-white/20 p-2 hover:bg-white/50 hover:text-black/80 rounded-full"
         >
-          <p className="block text-2xl sm:text-4xl font-bold ">
+          <Image class="sm:h-5 sm:w-5 h-3 w-3" />
+          <input
+            id="bannerFile"
+            type="file"
+            class="hidden"
+            @change="UploadBanner"
+          />
+        </label>
+
+        <div class="flex gap-3" v-if="isMyProfile && bannerData">
+          <label
+            class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm text-white bg-red-700 p-2 rounded-full"
+          >
+            <button @click="CancelUpdate">
+              <X class="sm:h-5 sm:w-5 h-3 w-3" />
+            </button>
+          </label>
+
+          <label
+            class="flex items-center gap-2 cursor-pointer text-xs sm:text-sm text-white bg-emerald-700 p-2 rounded-full"
+          >
+            <button @click="UpdateBanner">
+              <Check class="sm:h-5 sm:w-5 h-3 w-3" />
+            </button>
+          </label>
+        </div>
+      </div>
+
+      <div class="lg:mt-10 md:mt-6 lg:px-6 sm:px-8 px-4">
+        <div
+          class="flex lg:flex-row flex-col py-5 lg:items-center justify-between items-start"
+        >
+          <p class="block text-2xl sm:text-4xl font-bold">
             {{ author.name }}
           </p>
           <DropdownMenu>
@@ -116,13 +179,13 @@ const handleCopyLink = () => {
           </DropdownMenu>
         </div>
       </div>
-      <!-- List -->
+
+      <!-- List and showcase sections -->
       <Slider
         :categories="['Home', 'Lists']"
         :activeCategory="activeCategory"
         @update:activeCategory="setActiveCategory"
       />
-      <!-- showcase -->
       <div v-if="activeCategory === 'Home'">
         <div v-if="isMyProfile">
           <div v-for="post in posts" :key="post.id">
@@ -135,14 +198,14 @@ const handleCopyLink = () => {
           </div>
         </div>
       </div>
-
-      <div class="flex flex-col gap-5" v-if="activeCategory == 'Lists'">
+      <div class="flex flex-col gap-5 mt-3" v-if="activeCategory == 'Lists'">
         <div v-for="list in lists" :key="list.id">
           <ListCard :authorUsername="author.username" :list="list" />
         </div>
       </div>
     </div>
 
+    <!-- Profile info section -->
     <div class="hidden lg:flex md:col-span-1 sticky top-0 h-screen">
       <div class="mt-10 mr-auto ml-10">
         <div class="flex flex-col justify-between gap-10">
