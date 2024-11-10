@@ -100,6 +100,7 @@ const handleSubmitComment = async (postId) => {
   });
   comments.value.unshift(response);
   post.value.commentCount++;
+  commentContent.value = "";
 };
 </script>
 
