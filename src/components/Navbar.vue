@@ -15,6 +15,7 @@ import {
   Library,
   Search,
   PenLine,
+  Newspaper,
 } from "lucide-vue-next";
 import { logoutUser } from "@/api/auth/auth.js";
 import { useRouter } from "vue-router";
@@ -117,6 +118,12 @@ const submitSearch = () => {
                   <Library class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
                   <a :href="'/lists'" class="sm:text-sm text-xs w-full"
                     >Lists</a
+                  >
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Newspaper class="mr-2 sm:h-4 sm:w-4 h-2 w-2" />
+                  <a :href="'/posts'" class="sm:text-sm text-xs w-full"
+                    >Posts</a
                   >
                 </DropdownMenuItem>
                 <DropdownMenuItem>
