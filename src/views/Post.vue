@@ -268,18 +268,17 @@ const handleSubmitComment = async (postId) => {
 
       <!-- Post Content -->
       <div>
-        <div
-          v-for="block in post.content.blocks"
-          :key="block.id"
-          class="editor-block"
-        >
+        <div v-for="block in post.content.blocks" :key="block.id" class="mb-5">
           <!-- Paragraph Block -->
-          <div v-if="block.type === 'paragraph'" class="paragraph">
+          <div v-if="block.type === 'paragraph'" class="sm:text-base text-sm">
             <p>{{ block.data.text }}</p>
           </div>
 
           <!-- Header Block -->
-          <div v-if="block.type === 'header'" class="header">
+          <div
+            v-if="block.type === 'header'"
+            class="sm:text-lg text-base font-bold"
+          >
             <h2>{{ block.data.text }}</h2>
           </div>
 
@@ -414,18 +413,6 @@ const handleSubmitComment = async (postId) => {
 .overflow-y-auto {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
-}
-
-.editor-block {
-  margin-bottom: 20px;
-}
-
-.paragraph p {
-  font-size: 1.2em;
-}
-
-.header h2 {
-  font-size: 2em;
 }
 
 .list ul {
