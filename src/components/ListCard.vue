@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { userByUsername } from "@/api/user/user.js";
+import { userByUsername, me } from "@/api/user/user.js";
 import { ref, onMounted, watch } from "vue";
 import { Ellipsis } from "lucide-vue-next";
 import { useRouter } from "vue-router";
@@ -25,11 +25,13 @@ const props = defineProps({
 });
 
 const author = ref({});
+const Me = ref({});
 const list = ref(props.list);
 
 const fetchAuthor = async () => {
   if (props.authorUsername) {
     author.value = await userByUsername(props.authorUsername);
+    Me.value = await me();
   }
 };
 
@@ -92,19 +94,25 @@ const handleCopyLink = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent class="md:w-40 sm:w-48 w-40">
                 <DropdownMenuItem class="sm:text-sm text-xs"
-                  ><button @click="handleCopyLink">
+                  ><button class="w-full" @click="handleCopyLink">
                     Copy link
                   </button></DropdownMenuItem
                 >
-                <!-- <div v-if=""></div> -->
-                <DropdownMenuItem class="sm:text-sm text-xs"
-                  >Edit list info</DropdownMenuItem
-                >
-                <DropdownMenuItem class="sm:text-sm text-xs"
-                  ><button @click="deleteListHandler">
-                    Remove items
-                  </button></DropdownMenuItem
-                >
+                <div v-if="Me.id == author.id">
+                  <DropdownMenuItem class="sm:text-sm text-xs">
+                    <button class="w-full" @click="deleteListHandler">
+                      Edit list info
+                    </button>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem class="sm:text-sm text-xs"
+                    ><button
+                      class="w-full text-red-500"
+                      @click="deleteListHandler"
+                    >
+                      Remove items
+                    </button></DropdownMenuItem
+                  >
+                </div>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
