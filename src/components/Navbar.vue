@@ -28,6 +28,11 @@ const toggleSearchBar = () => {
   isSearchBarVisible.value = !isSearchBarVisible.value;
 };
 
+const props = defineProps({
+  userUsername: String,
+  userPhoto: String,
+});
+
 const handleLogout = () => {
   logoutUser();
   window.location.href = "/login";
@@ -69,12 +74,11 @@ const submitSearch = () => {
             ></div>
             <input
               type="text"
-              class="placeholder-gray-500 focus:outline-none rounded-r-full text-black bg-gray-100 py-2 pr-4"
+              className="placeholder-gray-500 focus:outline-none rounded-r-full text-black bg-gray-100 py-2 pr-4"
               placeholder="Search.."
               v-model="query"
               @keyup.enter="submitSearch"
             />
-          </div>
           </div>
         </div>
 
@@ -136,6 +140,8 @@ const submitSearch = () => {
           </DropdownMenu>
         </div>
       </div>
+      <!-- Mobile Toggle Button -->
+    </div>
   </nav>
 
   <!-- Search bar container -->
@@ -152,11 +158,3 @@ const submitSearch = () => {
     />
   </div>
 </template>
-
-
-<style scoped>
-/* Additional styling for the mobile search bar */
-.mt-2 {
-  margin-top: 0.5rem; /* Adjust spacing as needed */
-}
-</style>
