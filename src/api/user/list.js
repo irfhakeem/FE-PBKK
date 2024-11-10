@@ -93,3 +93,12 @@ export const isPostListed = async (data) => {
     throw new Error("Failed to check if post is listed");
   }
 };
+
+export const updateList = async (data) => {
+  try {
+    const response = await apiClient.patch("/update", data);
+    return response.data.data;
+  } catch (error) {
+    throw new Error("Failed to update list");
+  }
+};
