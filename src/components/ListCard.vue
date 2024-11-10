@@ -16,7 +16,7 @@ import { userByUsername, me } from "@/api/user/user.js";
 import { ref, onMounted, watch } from "vue";
 import { Ellipsis } from "lucide-vue-next";
 import { useRouter } from "vue-router";
-import { deleteList } from "@/api/user/list.js";
+import { deleteList, updateList } from "@/api/user/list.js";
 
 const router = useRouter();
 const props = defineProps({
@@ -27,6 +27,9 @@ const props = defineProps({
 const author = ref({});
 const Me = ref({});
 const list = ref(props.list);
+const modalRef = ref(null);
+const isModalOpen = ref(false);
+const newListTitle = ref("");
 
 const fetchAuthor = async () => {
   if (props.authorUsername) {
@@ -53,6 +56,28 @@ const handleCopyLink = () => {
   navigator.clipboard.writeText(
     `http://localhost:5173/profile/${author.value.username}/lists/${props.list.id}`
   );
+};
+
+const openModal = (event) => {
+  event.stopPropagation();
+  isModalOpen.value = true;
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
+
+const updateListHandler = async () => {
+  if (!newListTitle.value.trim()) return;
+
+  const updatedList = await updateList({
+    listId: list.value.id,
+    title: newListTitle.value,
+  });
+  list.value = updatedList;
+  newListTitle.value = "";
+  closeModal();
+  router.go(0);
 };
 </script>
 
@@ -100,7 +125,7 @@ const handleCopyLink = () => {
                 >
                 <div v-if="Me.id == author.id">
                   <DropdownMenuItem class="sm:text-sm text-xs">
-                    <button class="w-full" @click="deleteListHandler">
+                    <button class="w-full" @click="openModal">
                       Edit list info
                     </button>
                   </DropdownMenuItem>
@@ -154,4 +179,57 @@ const handleCopyLink = () => {
       </div>
     </div>
   </Card>
+
+  <!-- Modal for edit list -->
+  <div
+    v-if="isModalOpen"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20"
+    @click="closeModal"
+  >
+    <div
+      ref="modalRef"
+      class="bg-white rounded-lg p-6 w-[425px] max-w-[90vw]"
+      @click.stop
+    >
+      <div class="mb-4">
+        <h2 class="text-lg font-semibold text-black">Update List</h2>
+      </div>
+
+      <div class="mb-4">
+        <input
+          v-model="newListTitle"
+          class="w-full px-4 py-2 text-sm bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+          placeholder="List title"
+          @keyup.enter="updateListHandler"
+        />
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button
+          @click="closeModal"
+          class="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-md"
+        >
+          Cancel
+        </button>
+        <button
+          @click="updateListHandler"
+          class="px-4 py-2 text-sm text-white bg-black rounded-md hover:bg-gray-800"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+</style>
