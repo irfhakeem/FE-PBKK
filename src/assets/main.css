@@ -27,7 +27,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -53,7 +53,7 @@
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
 
   #editorjs {
@@ -62,6 +62,7 @@
   /* Remove margin from all elements */
   #editorjs .codex-editor {
     margin: 0 !important;
+    padding: 0 !important;
   }
 
   .ce-toolbar {
@@ -71,13 +72,8 @@
     transform: none !important;
   }
 
-  #editorjs .codex-editor__redactor,
-  #editorjs .ce-toolbar__content, 
-  #editorjs .ce-block,
-  #editorjs .ce-block__content,
-  #editorjs .ce-paragraph.cdx-block {
-    margin: 0 !important;
-    padding: 0 !important;
+  .codex-editor__redactor {
+    padding-bottom: 0 !important;
   }
 }
 @layer base {
