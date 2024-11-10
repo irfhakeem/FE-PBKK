@@ -123,7 +123,9 @@ onMounted(async () => {
             />
             <div class="flex flex-col items-start gap-2">
               <p class="text-base font-semibold">{{ author.name }}</p>
-              <p class="text-sm text-gray-500 font-medium">100 followers</p>
+              <p class="text-sm text-gray-500 font-medium">
+                {{ author.followers }} Followers
+              </p>
             </div>
             <p class="lg:block hidden text-xs text-gray-500 font-medium">
               {{ author.bio }}
