@@ -10,12 +10,12 @@ import FollowButton from "../components/FollowButton.vue";
 
 const router = useRoute();
 const tag = router.params.tagName;
-const user = ref({});
+const Me = ref({});
 const contents = ref([]);
 const type = router.params.type;
 
 onMounted(async () => {
-  user.value = await me();
+  Me.value = await me();
   contents.value = await recommendedDetail({ query: tag, type: type });
 
   console.log(contents.value);
@@ -23,7 +23,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <Navbar :user-username="user.username" :user-photo="user.avatar" />
+  <Navbar :user-username="Me.username" :user-photo="Me.avatar" />
   <div
     class="grid grid-cols-1 lg:grid-cols-3 lg:max-w-6xl lg:mx-auto pt-10 px-6 md:px-8 gap-10 lg:gap-5"
   >
@@ -81,6 +81,7 @@ onMounted(async () => {
                 </div>
               </div>
               <FollowButton
+                v-if="user.id != Me.id"
                 :followingId="user.id"
                 :style="'text-sm font-medium bg-[#37823a] px-4 py-2 rounded-full text-white disabled:bg-[#37823a]/30 hover:bg-[#295d2a]'"
               />
